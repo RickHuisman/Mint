@@ -7,7 +7,7 @@ namespace Mint.Tests;
 public class Tests
 {
     [Test]
-    public void Numerals()
+    public void LexNumerals()
     {
         var expect = new List<Token>()
         {
@@ -20,7 +20,7 @@ public class Tests
     }
 
     [Test]
-    public void TestReservedKeywords()
+    public void LexReservedKeywords()
     {
         var expect = new List<Token>()
         {
