@@ -29,13 +29,19 @@ public enum TokenType
     Slash,
     Comment,
 
-    // Literals
-    Identifier,
+    // Reserved keywords
+    Break,
+    Do,
+    Else,
+    ElseIf,
+    End,
+    Function,
+    Goto,
+    If,
+    
+    Name,
     String,
     Number,
-
-    // Reserved keywords
-    // TODO
 
     Eof
 }
@@ -46,7 +52,15 @@ public static class KeywordTranslator
     {
         return str switch
         {
-            _ => TokenType.Identifier
+            "break" => TokenType.Break,
+            "do" => TokenType.Do,
+            "else" => TokenType.Else,
+            "elseif" => TokenType.ElseIf,
+            "end" => TokenType.End,
+            "function" => TokenType.Function,
+            "goto" => TokenType.Goto,
+            "if" => TokenType.If,
+            _ => TokenType.Name
         };
     }
 }
