@@ -2,6 +2,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mint", "Mint\Mint.csproj", "{053B9F03-4E33-48C1-B6E5-0E18A80FFE1B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Mint.Tests", "Mint.Tests\Mint.Tests.csproj", "{E8BA53E3-075D-45BC-92F1-06172B80A873}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +14,9 @@ Global
 		{053B9F03-4E33-48C1-B6E5-0E18A80FFE1B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{053B9F03-4E33-48C1-B6E5-0E18A80FFE1B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{053B9F03-4E33-48C1-B6E5-0E18A80FFE1B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E8BA53E3-075D-45BC-92F1-06172B80A873}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E8BA53E3-075D-45BC-92F1-06172B80A873}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E8BA53E3-075D-45BC-92F1-06172B80A873}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E8BA53E3-075D-45BC-92F1-06172B80A873}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
