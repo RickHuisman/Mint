@@ -2,7 +2,7 @@
 using Mint.VM;
 
 var compiler = new Compiler();
-var functionProto = compiler.Compile("2 + 3");
+var functionProto = compiler.Compile("5 + 3");
 
 var vm = new VM();
 vm.Run(functionProto);

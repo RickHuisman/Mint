@@ -18,7 +18,7 @@ public class VM
                     _stack.Push(b + a);
                     break;
                 case Opcode.LoadK:
-                    _stack.Push(2);
+                    _stack.Push(functionProto.GetConstant());
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
