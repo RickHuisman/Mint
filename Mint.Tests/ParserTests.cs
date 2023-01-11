@@ -19,11 +19,16 @@ public class ParserTests
         }, null));
 
         const string source = "2 + 3";
+        RunParserTest(source, expect);
+    }
+
+    private static void RunParserTest(string source, object expect)
+    {
         var tokens = Lexer.Lex(source);
 
         var parser = new Parser();
         var actual = parser.ParseChunk(tokens);
-        
+
         TestHelper.AreEqual(expect, actual);
     }
 }

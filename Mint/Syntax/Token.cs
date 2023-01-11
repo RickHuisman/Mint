@@ -27,7 +27,6 @@ public enum TokenType
     GreaterThan,
     GreaterThanEqual,
     Slash,
-    Comment,
 
     // Reserved keywords
     Break,

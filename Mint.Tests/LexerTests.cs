@@ -16,7 +16,7 @@ public class Tests
             new(TokenType.Number, "5"),
         };
         const string source = "2 3 5";
-        TestLexer(source, expect);
+        RunLexerTest(source, expect);
     }
 
     [Test]
@@ -36,10 +36,10 @@ public class Tests
             new(TokenType.Name, "name"),
         };
         const string source = "break do else elseif end function goto if custom name";
-        TestLexer(source, expect);
+        RunLexerTest(source, expect);
     }
 
-    private static void TestLexer(string source, IList<Token> expect)
+    private static void RunLexerTest(string source, IList<Token> expect)
     {
         var actual = Lexer.Lex(source);
         Assert.AreEqual(expect, actual);

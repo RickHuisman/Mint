@@ -105,9 +105,9 @@ public class Parser
 
     private static bool HasNext()
     {
-        if (_tokens.Any())
+        if (_tokens.Any() && (_tokens.Last().Type != TokenType.Eof))
         {
-            if (_tokens.Last().Type != TokenType.Eof) return true;
+            return true;
         }
 
         return false;
