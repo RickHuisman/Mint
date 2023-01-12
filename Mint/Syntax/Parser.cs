@@ -22,7 +22,7 @@ public class Parser
             var statement = ParseStatement();
             statements.Add(statement);
         }
-        
+
         return new(statements, null);
     }
 
@@ -30,9 +30,23 @@ public class Parser
     {
         switch (PeekType())
         {
+            case TokenType.Function:
+                return ParseFunctionStatement();
+                break;
             default:
                 return new ExpressionStatement(ParseExpression());
         }
+    }
+
+    private static IStatement ParseFunctionStatement()
+    {
+        Consume(TokenType.Function, "");
+        var name = Consume(TokenType.Name, "TODO");
+        Consume(TokenType.LeftParen, "TODO");
+        Consume(TokenType.RightParen, "TODO");
+        var block = new Block(new List<IStatement>(), null);
+        Consume(TokenType.End, "TODO");
+        return new FunctionStatement(name.Source, new List<string>(), block);
     }
 
     private static IExpression ParseExpression()
@@ -48,17 +62,20 @@ public class Parser
 
         var expr = prefixRule(token);
 
-        while (precedence <= ParserRules.GetRule(PeekType()).Precedence)
+        if (HasNext()) // TODO: Cleanup.
         {
-            token = Next();
-            var infixRule = ParserRules.GetRule(token.Type).Infix;
-            if (infixRule == null) throw new Exception("Expected expression");
-            return infixRule(token, expr);
+            while (precedence <= ParserRules.GetRule(PeekType()).Precedence)
+            {
+                token = Next();
+                var infixRule = ParserRules.GetRule(token.Type).Infix;
+                if (infixRule == null) throw new Exception("Expected expression");
+                return infixRule(token, expr);
+            }
         }
 
         return expr;
     }
-    
+
     public static IExpression Binary(Token token, IExpression left)
     {
         var rule = ParserRules.GetRule(token.Type);
@@ -67,6 +84,7 @@ public class Parser
         {
             TokenType.Plus => BinaryOperator.Add,
             TokenType.EqualEqual => BinaryOperator.Equal,
+            TokenType.BangEqual => BinaryOperator.NotEqual,
             _ => throw new NotImplementedException()
         };
         return new BinaryExpression(left, op, right);
@@ -104,18 +122,7 @@ public class Parser
         return true;
     }
 
-    private static TokenType PeekType()
-    {
-        return HasNext() ? _tokens[^1].Type : TokenType.Eof;
-    }
+    private static TokenType PeekType() => _tokens[^1].Type;
 
-    private static bool HasNext()
-    {
-        if (_tokens.Any() && (_tokens.Last().Type != TokenType.Eof))
-        {
-            return true;
-        }
-
-        return false;
-    }
+    private static bool HasNext() => _tokens.Any();
 }

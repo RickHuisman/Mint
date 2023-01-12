@@ -13,6 +13,13 @@ public interface IStatement
     public void Compile(Compiler.Compiler compiler);
 }
 
+public record FunctionStatement(string name, List<string> Parameters, Block Body) : IStatement
+{
+    public void Compile(Compiler.Compiler compiler)
+    {
+    }
+}
+
 public record ReturnStatement : IStatement
 {
     public void Compile(Compiler.Compiler compiler)
@@ -48,6 +55,9 @@ public record BinaryExpression(IExpression Left, BinaryOperator Operator, IExpre
             case BinaryOperator.Equal:
                 compiler.Emit(Opcode.Equal);
                 break;
+            case BinaryOperator.NotEqual:
+                compiler.Emit(Opcode.NotEqual);
+                break;
             default:
                 throw new ArgumentOutOfRangeException();
         }
@@ -67,7 +77,7 @@ public record NumberExpression(double Number) : IExpression
     public void Compile(Compiler.Compiler compiler)
     {
         compiler.AddConstant(new Value(ValueType.Number, Number));
-        compiler.Emit(Opcode.LoadK);
+        compiler.Emit(Opcode.LoadConstant);
     }
 }
 
@@ -75,6 +85,7 @@ public enum BinaryOperator
 {
     Add,
     Equal,
+    NotEqual
 }
 
 public enum UnaryOperator

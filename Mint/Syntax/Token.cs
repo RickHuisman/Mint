@@ -41,8 +41,6 @@ public enum TokenType
     Name,
     String,
     Number,
-
-    Eof
 }
 
 public static class KeywordTranslator

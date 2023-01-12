@@ -20,7 +20,7 @@ public static class ParserRules
             new(TokenType.Number, Parser.Number, null, Precedence.None),
             new(TokenType.Plus, null, Parser.Binary, Precedence.Term),
             new(TokenType.EqualEqual, null, Parser.Binary, Precedence.Comparison),
-            new(TokenType.Eof, null, null, Precedence.None),
+            new(TokenType.BangEqual, null, Parser.Binary, Precedence.Comparison),
         };
     }
 }

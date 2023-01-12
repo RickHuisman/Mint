@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Mint.Syntax;
 using Mint.Test;
 using NUnit.Framework;
@@ -17,8 +18,25 @@ public class ParserTests
                 new NumberExpression(3)
             ))
         }, null));
-
         const string source = "2 + 3";
+        RunParserTest(source, expect);
+    }
+
+    [Test]
+    public void ParseFunction()
+    {
+        var expect = new Chunk(new Block(new()
+        {
+            new FunctionStatement(
+                "foo",
+                new List<string>(),
+                new Block(new List<IStatement>(), null)
+            ),
+        }, null));
+        const string source = @"
+function foo()
+end
+";
         RunParserTest(source, expect);
     }
 

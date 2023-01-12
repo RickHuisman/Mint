@@ -27,6 +27,5 @@ public class SuiteTests
     {
         var value = Mint.Interpret(source);
         TestHelper.AreEqual(value, new Value(ValueType.Boolean, true));
-        Console.WriteLine(value);
     }
 }

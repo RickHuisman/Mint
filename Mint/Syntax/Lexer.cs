@@ -14,17 +14,19 @@ public static class Lexer
 
         while (!IsAtEnd())
         {
-            tokens.Add(ScanToken());
+            var token = ScanToken();
+            if (token == null) break;
+            tokens.Add(token);
         }
 
         return tokens;
     }
 
-    private static Token ScanToken()
+    private static Token? ScanToken()
     {
         SkipWhitespace();
 
-        if (IsAtEnd()) return new Token(TokenType.Eof, "");
+        if (IsAtEnd()) return null;
 
         var c = Advance();
 

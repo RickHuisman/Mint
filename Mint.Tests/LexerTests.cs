@@ -9,7 +9,7 @@ public class Tests
     [Test]
     public void LexNumerals()
     {
-        var expect = new List<Token>()
+        var expect = new List<Token>
         {
             new(TokenType.Number, "2"),
             new(TokenType.Number, "3"),
@@ -22,7 +22,7 @@ public class Tests
     [Test]
     public void LexReservedKeywords()
     {
-        var expect = new List<Token>()
+        var expect = new List<Token>
         {
             new(TokenType.Break, "break"),
             new(TokenType.Do, "do"),
@@ -36,6 +36,24 @@ public class Tests
             new(TokenType.Name, "name"),
         };
         const string source = "break do else elseif end function goto if custom name";
+        RunLexerTest(source, expect);
+    }
+
+    [Test]
+    public void LexFunction()
+    {
+        var expect = new List<Token>
+        {
+            new(TokenType.Function, "function"),
+            new(TokenType.Name, "foo"),
+            new(TokenType.LeftParen, "("),
+            new(TokenType.RightParen, ")"),
+            new(TokenType.End, "end"),
+        };
+        const string source = @"
+function foo()
+end
+";
         RunLexerTest(source, expect);
     }
 

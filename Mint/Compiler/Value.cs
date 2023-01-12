@@ -3,7 +3,8 @@ namespace Mint.Compiler;
 public enum ValueType
 {
     Boolean,
-    Number
+    Number,
+    // nil, boolean, number, string, table, function, userdata, and thread TODO
 }
 
 public class Value

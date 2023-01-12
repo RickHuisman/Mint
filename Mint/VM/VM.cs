@@ -17,13 +17,18 @@ public class VM
                     var b = _stack.Pop();
                     _stack.Push(b + a);
                     break;
-                case Opcode.LoadK:
+                case Opcode.LoadConstant:
                     _stack.Push(functionProto.GetConstant());
                     break;
                 case Opcode.Equal:
                     var c = _stack.Pop();
                     var d = _stack.Pop();
                     _stack.Push(c == d);
+                    break;
+                case Opcode.NotEqual:
+                    var e = _stack.Pop();
+                    var f = _stack.Pop();
+                    _stack.Push(e != f);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
