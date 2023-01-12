@@ -4,4 +4,5 @@ public enum Opcode
 {
     Add,
     LoadK,
+    Equal
 }

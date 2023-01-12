@@ -5,27 +5,26 @@ namespace Mint.Compiler;
 
 public class Compiler
 {
-    private FunctionProto _currentFunction = new();
+    private readonly FunctionProto _currentFunction = new();
 
     public FunctionProto Compile(string source)
     {
         var tokens = Lexer.Lex(source);
         var parser = new Parser();
         var ast = parser.ParseChunk(tokens);
-        return CompileChunk(ast);
+        CompileChunk(ast);
+        return _currentFunction;
     }
 
-    private FunctionProto CompileChunk(Chunk chunk)
+    private void CompileChunk(Chunk chunk)
     {
         foreach (var statement in chunk.Block.Statements)
         {
             statement.Compile(this);
         }
-
-        return _currentFunction;
     }
 
-    public void AddConstant(double constant)
+    public void AddConstant(Value constant)
     {
         _currentFunction.Constants.Add(constant);
     }

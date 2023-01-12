@@ -4,7 +4,7 @@ namespace Mint.VM;
 
 public class VM
 {
-    private Stack<double> _stack = new();
+    private Stack<Value> _stack = new();
     
     public void Run(FunctionProto functionProto)
     {
@@ -20,11 +20,16 @@ public class VM
                 case Opcode.LoadK:
                     _stack.Push(functionProto.GetConstant());
                     break;
+                case Opcode.Equal:
+                    var c = _stack.Pop();
+                    var d = _stack.Pop();
+                    _stack.Push(c == d);
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
         }
     }
 
-    public double Peek() => _stack.Peek();
+    public Value Peek() => _stack.Peek();
 }

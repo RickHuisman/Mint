@@ -1,4 +1,6 @@
+using Mint.Compiler;
 using Mint.VM;
+using ValueType = Mint.Compiler.ValueType;
 
 namespace Mint.Syntax;
 
@@ -38,11 +40,21 @@ public record BinaryExpression(IExpression Left, BinaryOperator Operator, IExpre
     {
         Left.Compile(compiler);
         Right.Compile(compiler);
-        compiler.Emit(Opcode.Add);
+        switch (Operator)
+        {
+            case BinaryOperator.Add:
+                compiler.Emit(Opcode.Add);
+                break;
+            case BinaryOperator.Equal:
+                compiler.Emit(Opcode.Equal);
+                break;
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
     }
 }
 
-public record UnaryExpression(BinaryOperator Operator, IExpression Left) : IExpression
+public record UnaryExpression(UnaryOperator Operator, IExpression Left) : IExpression
 {
     public void Compile(Compiler.Compiler compiler)
     {
@@ -54,7 +66,7 @@ public record NumberExpression(double Number) : IExpression
 {
     public void Compile(Compiler.Compiler compiler)
     {
-        compiler.AddConstant(Number);
+        compiler.AddConstant(new Value(ValueType.Number, Number));
         compiler.Emit(Opcode.LoadK);
     }
 }
@@ -62,6 +74,7 @@ public record NumberExpression(double Number) : IExpression
 public enum BinaryOperator
 {
     Add,
+    Equal,
 }
 
 public enum UnaryOperator

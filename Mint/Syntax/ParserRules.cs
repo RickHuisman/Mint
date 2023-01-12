@@ -19,6 +19,7 @@ public static class ParserRules
         {
             new(TokenType.Number, Parser.Number, null, Precedence.None),
             new(TokenType.Plus, null, Parser.Binary, Precedence.Term),
+            new(TokenType.EqualEqual, null, Parser.Binary, Precedence.Comparison),
             new(TokenType.Eof, null, null, Precedence.None),
         };
     }
@@ -47,6 +48,7 @@ public class ParseRule
 public enum Precedence
 {
     None,
+    Comparison, // ==
     Term, // + -
     Factor, // * / %
 }

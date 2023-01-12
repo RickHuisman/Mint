@@ -63,7 +63,13 @@ public class Parser
     {
         var rule = ParserRules.GetRule(token.Type);
         var right = ParsePrecedence(rule.Precedence + 1);
-        return new BinaryExpression(left, BinaryOperator.Add, right);
+        var op = token.Type switch
+        {
+            TokenType.Plus => BinaryOperator.Add,
+            TokenType.EqualEqual => BinaryOperator.Equal,
+            _ => throw new NotImplementedException()
+        };
+        return new BinaryExpression(left, op, right);
     }
 
     public static IExpression Number(Token token)
