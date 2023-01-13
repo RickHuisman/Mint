@@ -23,6 +23,17 @@ public class ParserTests
     }
 
     [Test]
+    public void ParseLocal()
+    {
+        var expect = new Chunk(new Block(new()
+        {
+            new LocalStatement("x", new NumberExpression(10))
+        }, null));
+        const string source = @"local x = 10";
+        RunParserTest(source, expect);
+    }
+
+    [Test]
     public void ParseFunction()
     {
         var expect = new Chunk(new Block(new()
@@ -30,11 +41,15 @@ public class ParserTests
             new FunctionStatement(
                 "foo",
                 new List<string>(),
-                new Block(new List<IStatement>(), null)
+                new Block(new List<IStatement>()
+                {
+                    new LocalStatement("x", new NumberExpression(10))
+                }, null)
             ),
         }, null));
         const string source = @"
 function foo()
+    local x = 10
 end
 ";
         RunParserTest(source, expect);

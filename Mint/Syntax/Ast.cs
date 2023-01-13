@@ -13,10 +13,19 @@ public interface IStatement
     public void Compile(Compiler.Compiler compiler);
 }
 
+public record LocalStatement(string Name, IExpression Value) : IStatement
+{
+    public void Compile(Compiler.Compiler compiler)
+    {
+        throw new NotImplementedException();
+    }
+}
+
 public record FunctionStatement(string name, List<string> Parameters, Block Body) : IStatement
 {
     public void Compile(Compiler.Compiler compiler)
     {
+        throw new NotImplementedException();
     }
 }
 

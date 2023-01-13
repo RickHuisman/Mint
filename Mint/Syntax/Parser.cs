@@ -30,12 +30,23 @@ public class Parser
     {
         switch (PeekType())
         {
+            case TokenType.Local:
+                // TODO: Check for local function.
+                return ParseLocalStatement();
             case TokenType.Function:
                 return ParseFunctionStatement();
-                break;
             default:
                 return new ExpressionStatement(ParseExpression());
         }
+    }
+
+    private static IStatement ParseLocalStatement()
+    {
+        Consume(TokenType.Local, "");
+        var name = Consume(TokenType.Name, "");
+        Consume(TokenType.Equal, "");
+        var value = ParseExpression();
+        return new LocalStatement(name.Source, value);
     }
 
     private static IStatement ParseFunctionStatement()
@@ -44,7 +55,13 @@ public class Parser
         var name = Consume(TokenType.Name, "TODO");
         Consume(TokenType.LeftParen, "TODO");
         Consume(TokenType.RightParen, "TODO");
-        var block = new Block(new List<IStatement>(), null);
+        var statements = new List<IStatement>();
+        while (!Check(TokenType.End))
+        {
+            var statement = ParseStatement();
+            statements.Add(statement);
+        }
+        var block = new Block(statements, null);
         Consume(TokenType.End, "TODO");
         return new FunctionStatement(name.Source, new List<string>(), block);
     }

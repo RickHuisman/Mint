@@ -37,6 +37,7 @@ public enum TokenType
     Function,
     Goto,
     If,
+    Local,
     
     Name,
     String,
@@ -57,6 +58,7 @@ public static class KeywordTranslator
             "function" => TokenType.Function,
             "goto" => TokenType.Goto,
             "if" => TokenType.If,
+            "local" => TokenType.Local,
             _ => TokenType.Name
         };
     }
