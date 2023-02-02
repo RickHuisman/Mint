@@ -54,5 +54,6 @@ public enum Precedence
     Comparison, // ==
     Term, // + -
     Factor, // * / %
+    Assign, // =
     Call, // foo()
 }

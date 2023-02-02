@@ -35,9 +35,16 @@ public class Parser
                 return ParseLocalStatement();
             case TokenType.Function:
                 return ParseFunctionStatement();
-            default:
-                return new ExpressionStatement(ParseExpression());
+            case TokenType.Name:
+                // Check if next token is a '='.
+                if (PeekType(2) == TokenType.Equal)
+                {
+                    return ParseGlobalStatement();
+                }
+                break;
         }
+        
+        return new ExpressionStatement(ParseExpression());
     }
 
     private static IStatement ParseLocalStatement()
@@ -106,6 +113,14 @@ public class Parser
         };
         return new BinaryExpression(left, op, right);
     }
+
+    private static IStatement ParseGlobalStatement()
+    {
+        var name = Consume(TokenType.Name, "");
+        Consume(TokenType.Equal, "");
+        var value = ParseExpression();
+        return new GlobalStatement(name.Source, value);
+    }
     
     public static IExpression ParseCall(Token token, IExpression left)
     {
@@ -151,6 +166,8 @@ public class Parser
     }
 
     private static TokenType PeekType() => _tokens[^1].Type;
+    
+    private static TokenType PeekType(int n) => _tokens[^n].Type;
 
     private static bool HasNext() => _tokens.Any();
 }

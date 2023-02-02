@@ -21,6 +21,17 @@ public class ParserTests
         const string source = "2 + 3";
         RunParserTest(source, expect);
     }
+    
+    [Test]
+    public void ParseGlobal()
+    {
+        var expect = new Chunk(new Block(new()
+        {
+            new GlobalStatement("x", new NumberExpression(10))
+        }, null));
+        const string source = @"x = 10";
+        RunParserTest(source, expect);
+    }
 
     [Test]
     public void ParseLocal()

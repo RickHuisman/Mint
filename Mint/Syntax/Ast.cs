@@ -13,6 +13,14 @@ public interface IStatement
     public void Compile(Compiler.Compiler compiler);
 }
 
+public record GlobalStatement(string Name, IExpression Value) : IStatement
+{
+    public void Compile(Compiler.Compiler compiler)
+    {
+        throw new NotImplementedException();
+    }
+}
+
 public record LocalStatement(string Name, IExpression Value) : IStatement
 {
     public void Compile(Compiler.Compiler compiler)
