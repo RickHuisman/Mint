@@ -19,9 +19,7 @@ public class VM
             switch (opcode)
             {
                 case Opcode.Add:
-                    var a = _stack.Pop();
-                    var b = _stack.Pop();
-                    _stack.Push(b + a);
+                    Add();
                     break;
                 case Opcode.LoadConstant:
                     _stack.Push(functionProto.GetConstant());
@@ -44,6 +42,13 @@ public class VM
                     break;
             }
         }
+    }
+
+    private void Add()
+    {
+        var a = _stack.Pop();
+        var b = _stack.Pop();
+        _stack.Push(b + a);
     }
 
     private void GetGlobal()
