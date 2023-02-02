@@ -5,5 +5,7 @@ public enum Opcode
     Add,
     LoadConstant,
     Equal,
-    NotEqual
+    NotEqual,
+    GetGlobal,
+    SetGlobal,
 }

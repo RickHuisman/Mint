@@ -4,7 +4,8 @@ public enum ValueType
 {
     Boolean,
     Number,
-    // nil, boolean, number, string, table, function, userdata, and thread TODO
+    String
+    // nil, boolean, number, table, function, userdata, and thread TODO
 }
 
 public class Value
@@ -12,6 +13,7 @@ public class Value
     public ValueType ValueType { get; }
     public double Number { get; set; }
     public bool Boolean { get; set; }
+    public string String { get; set; }
 
     public Value(ValueType valueType, double number)
     {
@@ -23,6 +25,12 @@ public class Value
     {
         ValueType = valueType;
         Boolean = boolean;
+    }
+    
+    public Value(ValueType valueType, string @string)
+    {
+        ValueType = valueType;
+        String = @string;
     }
 
     public static Value operator +(Value a, Value b)
@@ -50,6 +58,7 @@ public class Value
     {
         if (ValueType == ValueType.Number) return Number.ToString();
         if (ValueType == ValueType.Boolean) return Boolean.ToString();
+        if (ValueType == ValueType.String) return String;
         throw new NotImplementedException();
     }
 }

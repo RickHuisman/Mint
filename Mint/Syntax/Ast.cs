@@ -17,7 +17,10 @@ public record GlobalStatement(string Name, IExpression Value) : IStatement
 {
     public void Compile(Compiler.Compiler compiler)
     {
-        throw new NotImplementedException();
+        Value.Compile(compiler);
+        
+        compiler.Emit(Opcode.SetGlobal);
+        compiler.AddConstant(new Value(ValueType.String, Name));
     }
 }
 
@@ -110,7 +113,9 @@ public record NameExpression(string Name) : IExpression
 {
     public void Compile(Compiler.Compiler compiler)
     {
-        throw new NotImplementedException();
+        // Get global.
+        compiler.Emit(Opcode.GetGlobal);
+        compiler.AddConstant(new Value(ValueType.String, Name));
     }
 }
 
