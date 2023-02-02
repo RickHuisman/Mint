@@ -21,7 +21,15 @@ public record LocalStatement(string Name, IExpression Value) : IStatement
     }
 }
 
-public record FunctionStatement(string name, List<string> Parameters, Block Body) : IStatement
+public record FunctionStatement(string Name, List<string> Parameters, Block Body) : IStatement
+{
+    public void Compile(Compiler.Compiler compiler)
+    {
+        throw new NotImplementedException();
+    }
+}
+
+public record FunctionCallExpression(IExpression Name, List<IExpression> Arguments) : IExpression
 {
     public void Compile(Compiler.Compiler compiler)
     {
@@ -87,6 +95,14 @@ public record NumberExpression(double Number) : IExpression
     {
         compiler.AddConstant(new Value(ValueType.Number, Number));
         compiler.Emit(Opcode.LoadConstant);
+    }
+}
+
+public record NameExpression(string Name) : IExpression
+{
+    public void Compile(Compiler.Compiler compiler)
+    {
+        throw new NotImplementedException();
     }
 }
 

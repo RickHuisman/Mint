@@ -55,13 +55,34 @@ end
         RunParserTest(source, expect);
     }
 
+    [Test]
+    public void ParseFunctionCall()
+    {
+        var expect = new Chunk(new Block(new()
+        {
+            new FunctionStatement(
+                "foo",
+                new List<string>(),
+                new Block(new List<IStatement>()
+                {
+                }, null)
+            ),
+            new ExpressionStatement(new FunctionCallExpression(new NameExpression("foo"), new List<IExpression>()))
+        }, null));
+        const string source = @"
+function foo()
+end
+
+foo()
+";
+        RunParserTest(source, expect);
+    }
+
     private static void RunParserTest(string source, object expect)
     {
         var tokens = Lexer.Lex(source);
-
         var parser = new Parser();
         var actual = parser.ParseChunk(tokens);
-
         TestHelper.AreEqual(expect, actual);
     }
 }

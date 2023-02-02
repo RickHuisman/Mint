@@ -106,6 +106,17 @@ public class Parser
         };
         return new BinaryExpression(left, op, right);
     }
+    
+    public static IExpression ParseCall(Token token, IExpression left)
+    {
+        Consume(TokenType.RightParen, "TODO");
+        return new FunctionCallExpression(left, new List<IExpression>());
+    }
+
+    public static IExpression ParseName(Token token)
+    {
+        return new NameExpression(token.Source);
+    }
 
     public static IExpression Number(Token token)
     {
