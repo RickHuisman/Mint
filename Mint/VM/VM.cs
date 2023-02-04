@@ -4,16 +4,16 @@ using ValueType = Mint.Compiler.ValueType;
 
 namespace Mint.VM;
 
-public class VM
+public class VM : Object
 {
     private Dictionary<string, Value> _globals = new();
     private Stack<Value> _stack = new();
     private FunctionProto _functionProto;
-    
+
     public void Run(FunctionProto functionProto)
     {
         _functionProto = functionProto;
-        
+
         foreach (var opcode in _functionProto.Opcodes)
         {
             switch (opcode)
@@ -22,17 +22,13 @@ public class VM
                     Add();
                     break;
                 case Opcode.LoadConstant:
-                    _stack.Push(functionProto.GetConstant());
+                    LoadConstant();
                     break;
                 case Opcode.Equal:
-                    var c = _stack.Pop();
-                    var d = _stack.Pop();
-                    _stack.Push(c == d);
+                    Equal();
                     break;
                 case Opcode.NotEqual:
-                    var e = _stack.Pop();
-                    var f = _stack.Pop();
-                    _stack.Push(e != f);
+                    NotEqual();
                     break;
                 case Opcode.GetGlobal:
                     GetGlobal();
@@ -40,6 +36,8 @@ public class VM
                 case Opcode.SetGlobal:
                     SetGlobal();
                     break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
         }
     }
@@ -51,21 +49,44 @@ public class VM
         _stack.Push(b + a);
     }
 
+    private void LoadConstant()
+    {
+        _stack.Push(ReadConstant());
+    }
+
+    private void Equal()
+    {
+        var a = _stack.Pop();
+        var b = _stack.Pop();
+        _stack.Push(a == b);
+    }
+
+    private void NotEqual()
+    {
+        var a = _stack.Pop();
+        var b = _stack.Pop();
+        _stack.Push(a != b);
+    }
+
     private void GetGlobal()
     {
-        var name = ReadConstant();
-        Debug.Assert(name.ValueType == ValueType.String);
-        var value = _globals[name.String];
+        var name = ReadString();
+        var value = _globals[name];
         _stack.Push(value);
     }
 
     private void SetGlobal()
     {
+        var name = ReadString();
+        var value = Peek();
+        _globals[name] = value;
+    }
+
+    private string ReadString()
+    {
         var name = ReadConstant();
         Debug.Assert(name.ValueType == ValueType.String);
-        
-        var value = Peek();
-        _globals[name.String] = value;
+        return name.String;
     }
 
     private Value ReadConstant()

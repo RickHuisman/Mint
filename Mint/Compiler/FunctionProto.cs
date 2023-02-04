@@ -32,9 +32,9 @@ public class FunctionProto
         
         // Print instructions.
         builder.AppendLine("Instructions:");
-        foreach (var opcode in Opcodes)
+        for (var i = 0; i < Opcodes.Count; i++)
         {
-            builder.AppendLine($"{opcode}");
+            builder.AppendLine($"{i} - {Opcodes[i]}");
         }
 
         return builder.ToString();
