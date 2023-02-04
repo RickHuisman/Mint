@@ -49,9 +49,20 @@ public record LocalStatement(string Name, IExpression Value) : IStatement
 {
     public void Compile(Compiler.Compiler compiler)
     {
+        // Cast to identifier.
+        // var identifier = (Identifier) Variable; // TODO: Safe cast?
+
+        compiler.DeclareVariable(Name);
+
+        // Compile initializer.
         Value.Compile(compiler);
-        
+
         compiler.Emit(Opcode.SetLocal);
+
+        var slot = compiler.ResolveLocal(Name);
+        if (slot == -1) throw new Exception();
+
+        compiler.Emit((byte) slot);
     }
 }
 
@@ -137,10 +148,17 @@ public record NameExpression(string Name) : IExpression
 {
     public void Compile(Compiler.Compiler compiler)
     {
+        // Get local.
+        var slot = compiler.ResolveLocal(Name);
+        if (slot == -1) throw new Exception();
+
+        compiler.Emit(Opcode.GetLocal);
+        compiler.Emit((byte) slot);
+        
         // Get global.
-        compiler.Emit(Opcode.GetGlobal);
-        var constantId = compiler.AddConstant(new Value(ValueType.String, Name));
-        compiler.Emit(constantId);
+        // compiler.Emit(Opcode.GetGlobal);
+        // var constantId = compiler.AddConstant(new Value(ValueType.String, Name));
+        // compiler.Emit(constantId);
     }
 }
 

@@ -32,6 +32,12 @@ public class VM
                 case Opcode.NotEqual:
                     NotEqual();
                     break;
+                case Opcode.SetLocal:
+                    SetLocal();
+                    break;
+                case Opcode.GetLocal:
+                    GetLocal();
+                    break;
                 case Opcode.GetGlobal:
                     GetGlobal();
                     break;
@@ -49,35 +55,47 @@ public class VM
 
     private void Add()
     {
-        var a = _stack.Pop();
-        var b = _stack.Pop();
-        _stack.Push(b + a);
+        var a = Pop();
+        var b = Pop();
+        Push(b + a);
     }
 
     private void LoadConstant()
     {
-        _stack.Push(ReadConstant());
+        Push(ReadConstant());
     }
 
     private void Equal()
     {
-        var a = _stack.Pop();
-        var b = _stack.Pop();
-        _stack.Push(a == b);
+        var a = Pop();
+        var b = Pop();
+        Push(a == b);
     }
 
     private void NotEqual()
     {
-        var a = _stack.Pop();
-        var b = _stack.Pop();
-        _stack.Push(a != b);
+        var a = Pop();
+        var b = Pop();
+        Push(a != b);
+    }
+
+    private void SetLocal()
+    {
+        var slot = ReadByte();
+        _stack[slot] = Peek();
+    }
+
+    private void GetLocal()
+    {
+        var slot = ReadByte();
+        Push(_stack[slot]);
     }
 
     private void GetGlobal()
     {
         var name = ReadString();
         var value = _globals[name];
-        _stack.Push(value);
+        Push(value);
     }
 
     private void SetGlobal()
@@ -89,7 +107,7 @@ public class VM
 
     private void Print()
     {
-        var value = _stack.Pop();
+        var value = Pop();
         Console.WriteLine(value);
     }
 
@@ -113,9 +131,9 @@ public class VM
         return b;
     }
 
-    public Value? Peek()
-    {
-        _stack.TryPeek(out var peek);
-        return peek;
-    }
+    private void Push(Value value) => _stack.Push(value);
+    
+    private Value Pop() => _stack.Pop();
+
+    public Value? Peek() => _stack.Peek();
 }

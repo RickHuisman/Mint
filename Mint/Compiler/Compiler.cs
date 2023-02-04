@@ -23,6 +23,34 @@ public class Compiler
             statement.Compile(this);
         }
     }
+    
+    public void DeclareVariable(string name)
+    {
+        if (_current.Locals.Locals.Any(l => name == l.Name))
+        {
+            throw new Exception();
+        }
+
+        // Add local.
+        if (_current.Locals.Locals.Count == ushort.MaxValue)
+        {
+            throw new Exception();
+            // TODO: Throw error if too many locals.
+        }
+
+        var local = new Local(name, 0, true, (uint) _current.Locals.Locals.Count);
+        _current.Locals.Locals.Add(local);
+    }
+
+    public int ResolveLocal(string name)
+    {
+        foreach (var local in _current.Locals.Locals.Where(local => name == local.Name))
+        {
+            return (int) local.Slot;
+        }
+
+        return -1;
+    }
 
     public void BeginScope() => _current.BeginScope();
 
@@ -45,7 +73,7 @@ public class CompilerInstance
 {
     public readonly FunctionProto Function = new();
     // private Local[] Locals = new Local[byte.MaxValue]; // 256 locals max. TODO: Use fixed size array for locals.
-    private LocalsList Locals = new();
+    public LocalsList Locals = new();
     private readonly CompilerInstance? _enclosing;
     private int scopeDepth { get; }
 
@@ -56,7 +84,7 @@ public class CompilerInstance
 
 public class LocalsList
 {
-    private List<Local> _locals = new();
+    public List<Local> Locals = new();
     public uint ScopeDepth { get; private set; }
 
     public void BeginScope()

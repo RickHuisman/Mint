@@ -15,7 +15,9 @@ var compiler = new Compiler();
 // ");
 
 var functionProto = compiler.Compile(@"
-20 == 20
+local x = 2
+local y = 3
+print(x + y)
 ");
 
 
