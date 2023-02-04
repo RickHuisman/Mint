@@ -32,11 +32,12 @@ public class Tests
             new(TokenType.Function, "function"),
             new(TokenType.Goto, "goto"),
             new(TokenType.If, "if"),
+            new(TokenType.If, "print"),
             new(TokenType.Local, "local"),
             new(TokenType.Name, "custom"),
             new(TokenType.Name, "name"),
         };
-        const string source = "break do else elseif end function goto if local custom name";
+        const string source = "break do else elseif end function goto if print local custom name";
         RunLexerTest(source, expect);
     }
 

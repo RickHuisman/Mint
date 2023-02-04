@@ -4,7 +4,7 @@ namespace Mint;
 
 public static class Mint
 {
-    public static Value Interpret(string source)
+    public static Value? Interpret(string source)
     {
         var compiler = new Compiler.Compiler();
         var functionProto = compiler.Compile(source);

@@ -38,6 +38,7 @@ public enum TokenType
     Goto,
     If,
     Local,
+    Print, // TODO: Temporary keyword.
     
     Name,
     String,
@@ -59,6 +60,7 @@ public static class KeywordTranslator
             "goto" => TokenType.Goto,
             "if" => TokenType.If,
             "local" => TokenType.Local,
+            "print" => TokenType.Print,
             _ => TokenType.Name
         };
     }

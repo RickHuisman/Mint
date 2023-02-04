@@ -22,6 +22,9 @@ public static class ParserRules
             new(TokenType.EqualEqual, null, Parser.Binary, Precedence.Comparison),
             new(TokenType.BangEqual, null, Parser.Binary, Precedence.Comparison),
             new(TokenType.LeftParen, null, Parser.ParseCall, Precedence.Call),
+            new(TokenType.RightParen, null, null, Precedence.None),
+            new(TokenType.Do, null, null, Precedence.None),
+            new(TokenType.Print, null, null, Precedence.None),
             new(TokenType.Name,  Parser.ParseName, null, Precedence.None),
             new(TokenType.End, null, null, Precedence.None),
         };

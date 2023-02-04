@@ -25,6 +25,8 @@ public class Parser
         {
             case TokenType.Do:
                 return ParseBlock();
+            case TokenType.Print:
+                return ParsePrint();
             case TokenType.Local:
                 // TODO: Check for local function.
                 return ParseLocalStatement();
@@ -53,6 +55,15 @@ public class Parser
         }
         // TODO: Parse return.
         return new Block(statements, null);
+    }
+
+    private static IStatement ParsePrint()
+    {
+        Consume(TokenType.Print, "");
+        Consume(TokenType.LeftParen, "");
+        var value = ParseExpression();
+        Consume(TokenType.RightParen, "");
+        return new PrintStatement(value);
     }
 
     private static IStatement ParseLocalStatement()

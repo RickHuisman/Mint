@@ -19,6 +19,15 @@ public record Block(List<IStatement> Statements, ReturnStatement? ReturnStatemen
     }
 }
 
+public record PrintStatement(IExpression Value) : IStatement
+{
+    public void Compile(Compiler.Compiler compiler)
+    {
+        Value.Compile(compiler);
+        compiler.Emit(Opcode.Print);
+    }
+}
+
 public record GlobalStatement(string Name, IExpression Value) : IStatement
 {
     public void Compile(Compiler.Compiler compiler)

@@ -36,6 +36,9 @@ public class VM : Object
                 case Opcode.SetGlobal:
                     SetGlobal();
                     break;
+                case Opcode.Print:
+                    Print();
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -82,6 +85,12 @@ public class VM : Object
         _globals[name] = value;
     }
 
+    private void Print()
+    {
+        var value = _stack.Pop();
+        Console.WriteLine(value);
+    }
+
     private string ReadString()
     {
         var name = ReadConstant();
@@ -94,5 +103,9 @@ public class VM : Object
         return _functionProto.GetConstant();
     }
 
-    public Value Peek() => _stack.Peek();
+    public Value? Peek()
+    {
+        _stack.TryPeek(out var peek);
+        return peek;
+    }
 }

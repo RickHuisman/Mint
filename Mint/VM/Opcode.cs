@@ -8,4 +8,5 @@ public enum Opcode
     NotEqual,
     GetGlobal,
     SetGlobal,
+    Print, // TODO: Temporary opcode.
 }
