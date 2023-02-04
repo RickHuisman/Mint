@@ -32,7 +32,7 @@ public class Tests
             new(TokenType.Function, "function"),
             new(TokenType.Goto, "goto"),
             new(TokenType.If, "if"),
-            new(TokenType.If, "print"),
+            new(TokenType.Print, "print"),
             new(TokenType.Local, "local"),
             new(TokenType.Name, "custom"),
             new(TokenType.Name, "name"),

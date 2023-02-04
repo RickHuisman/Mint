@@ -15,7 +15,12 @@ public record Block(List<IStatement> Statements, ReturnStatement? ReturnStatemen
 {
     public void Compile(Compiler.Compiler compiler)
     {
-        throw new NotImplementedException();
+        compiler.BeginScope();
+        foreach (var statement in Statements)
+        {
+            statement.Compile(compiler);
+        }
+        compiler.EndScope();
     }
 }
 
@@ -35,7 +40,8 @@ public record GlobalStatement(string Name, IExpression Value) : IStatement
         Value.Compile(compiler);
         
         compiler.Emit(Opcode.SetGlobal);
-        compiler.AddConstant(new Value(ValueType.String, Name));
+        var constantId = compiler.AddConstant(new Value(ValueType.String, Name));
+        compiler.Emit(constantId);
     }
 }
 
@@ -43,7 +49,9 @@ public record LocalStatement(string Name, IExpression Value) : IStatement
 {
     public void Compile(Compiler.Compiler compiler)
     {
-        throw new NotImplementedException();
+        Value.Compile(compiler);
+        
+        compiler.Emit(Opcode.SetLocal);
     }
 }
 
@@ -119,8 +127,9 @@ public record NumberExpression(double Number) : IExpression
 {
     public void Compile(Compiler.Compiler compiler)
     {
-        compiler.AddConstant(new Value(ValueType.Number, Number));
         compiler.Emit(Opcode.LoadConstant);
+        var constantId = compiler.AddConstant(new Value(ValueType.Number, Number));
+        compiler.Emit(constantId);
     }
 }
 
@@ -130,7 +139,8 @@ public record NameExpression(string Name) : IExpression
     {
         // Get global.
         compiler.Emit(Opcode.GetGlobal);
-        compiler.AddConstant(new Value(ValueType.String, Name));
+        var constantId = compiler.AddConstant(new Value(ValueType.String, Name));
+        compiler.Emit(constantId);
     }
 }
 

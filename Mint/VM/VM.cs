@@ -4,18 +4,20 @@ using ValueType = Mint.Compiler.ValueType;
 
 namespace Mint.VM;
 
-public class VM : Object
+public class VM
 {
-    private Dictionary<string, Value> _globals = new();
+    private int _ip;
     private Stack<Value> _stack = new();
+    private Dictionary<string, Value> _globals = new();
     private FunctionProto _functionProto;
 
     public void Run(FunctionProto functionProto)
     {
         _functionProto = functionProto;
 
-        foreach (var opcode in _functionProto.Opcodes)
+        while (_ip < _functionProto.Code.Count)
         {
+            var opcode = (Opcode) ReadByte();
             switch (opcode)
             {
                 case Opcode.Add:
@@ -100,7 +102,15 @@ public class VM : Object
 
     private Value ReadConstant()
     {
-        return _functionProto.GetConstant();
+        var index = ReadByte();
+        return _functionProto.Constants[index];
+    }
+
+    private byte ReadByte()
+    {
+        var b = _functionProto.Code[_ip];
+        _ip += 1;
+        return b;
     }
 
     public Value? Peek()

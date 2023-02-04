@@ -1,21 +1,21 @@
-using System.Text;
-using Mint.VM;
+using System.Text; using Mint.VM;
 
 namespace Mint.Compiler;
 
 public class FunctionProto
 {
     public List<Value> Constants = new();
-    private int _constantId;
-    public List<Opcode> Opcodes = new();
+    public List<byte> Code = new();
 
-    public Value GetConstant()
+    public byte AddConstant(Value constant)
     {
-        _constantId += 1;
-        return Constants[_constantId - 1];
+        Constants.Add(constant);
+        return (byte) (Constants.Count - 1);
     }
 
-    public void Write(Opcode op) => Opcodes.Add(op);
+    public void Write(Opcode op) => Code.Add((byte) op);
+    
+    public void Write(byte b) => Code.Add(b);
 
     public override string ToString()
     {
@@ -31,11 +31,12 @@ public class FunctionProto
         }
         
         // Print instructions.
-        builder.AppendLine("Instructions:");
-        for (var i = 0; i < Opcodes.Count; i++)
-        {
-            builder.AppendLine($"{i} - {Opcodes[i]}");
-        }
+        // TODO:
+        // builder.AppendLine("Instructions:");
+        // for (var i = 0; i < .Count; i++)
+        // {
+        //     builder.AppendLine($"{i} - {Opcodes[i]}");
+        // }
 
         return builder.ToString();
     }
