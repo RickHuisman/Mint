@@ -15,13 +15,12 @@ var compiler = new Compiler();
 // ");
 
 var functionProto = compiler.Compile(@"
-local x = 2
-local y = 3
+local x = 10
+local y = 10
 print(x + y)
 ");
 
-
 Console.WriteLine(functionProto);
-var vm = new VM();
-vm.Run(functionProto);
-Console.WriteLine(vm.Peek()!);
+// var vm = new VM();
+// vm.Run(functionProto);
+// Console.WriteLine(vm.Peek()!);

@@ -49,9 +49,6 @@ public record LocalStatement(string Name, IExpression Value) : IStatement
 {
     public void Compile(Compiler.Compiler compiler)
     {
-        // Cast to identifier.
-        // var identifier = (Identifier) Variable; // TODO: Safe cast?
-
         compiler.DeclareVariable(Name);
 
         // Compile initializer.

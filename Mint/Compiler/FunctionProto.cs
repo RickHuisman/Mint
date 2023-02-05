@@ -22,22 +22,50 @@ public class FunctionProto
         var builder = new StringBuilder();
         
         builder.AppendLine("== disarm <MAIN> ==");
-        builder.AppendLine("Constants:");
-
-        // Print constants.
-        for (var i = 0; i < Constants.Count; i++)
+        for (var offset = 0; offset < Code.Count;)
         {
-            builder.AppendLine($"{i} - {Constants[i]}");
+            offset = DisassembleInstruction(builder, offset);
         }
-        
-        // Print instructions.
-        // TODO:
-        // builder.AppendLine("Instructions:");
-        // for (var i = 0; i < .Count; i++)
-        // {
-        //     builder.AppendLine($"{i} - {Opcodes[i]}");
-        // }
 
         return builder.ToString();
+    }
+    
+    private int DisassembleInstruction(StringBuilder builder, int offset)
+    {
+        builder.Append($"{offset:X4} ");
+
+        var instruction = (Opcode) Code[offset];
+        return instruction switch
+        {
+            Opcode.LoadConstant => ConstantInstruction(builder, "load_constant", offset),
+            Opcode.Add => SimpleInstruction(builder, "add", offset),
+            Opcode.SetLocal => ByteInstruction(builder, "set_local", offset),
+            Opcode.GetLocal => ByteInstruction(builder, "get_local", offset),
+            Opcode.Print => SimpleInstruction(builder, "print", offset),
+            Opcode.Pop => SimpleInstruction(builder, "pop", offset),
+            _ => throw new Exception($"Unknown opcode {instruction}")
+        };
+    }
+
+    private static int SimpleInstruction(StringBuilder builder, string name, int offset)
+    {
+        builder.AppendLine(name);
+        return offset + 1;
+    }
+
+    private int ConstantInstruction(StringBuilder builder, string name, int offset)
+    {
+        var constant = Code[offset + 1];
+        builder.AppendLine($"{name,-16} '{Constants[constant]}'");
+        return offset + 2;
+    }
+
+    private int ByteInstruction(StringBuilder builder, string name, int offset)
+    {
+        var slot = Code[offset + 1];
+
+        var constant = Code[offset + 1];
+        builder.AppendLine($"{name,-16} '{slot}'");
+        return offset + 2;
     }
 }

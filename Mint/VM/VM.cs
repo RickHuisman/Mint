@@ -47,6 +47,9 @@ public class VM
                 case Opcode.Print:
                     Print();
                     break;
+                case Opcode.Pop:
+                    Pop();
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }

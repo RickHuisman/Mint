@@ -32,13 +32,13 @@ public class Compiler
         }
 
         // Add local.
-        if (_current.Locals.Locals.Count == ushort.MaxValue)
+        if (_current.Locals.Locals.Count == byte.MaxValue)
         {
             throw new Exception();
             // TODO: Throw error if too many locals.
         }
 
-        var local = new Local(name, 0, true, (uint) _current.Locals.Locals.Count);
+        var local = new Local(name, 0, (uint) _current.Locals.Locals.Count);
         _current.Locals.Locals.Add(local);
     }
 
@@ -56,7 +56,10 @@ public class Compiler
 
     public void EndScope()
     {
-        throw new NotImplementedException();
+        for (var i = 0; i < _current.Locals.Locals.Count; i++)
+        {
+            Emit(Opcode.Pop);
+        }
     }
 
     public byte AddConstant(Value constant)
@@ -97,11 +100,6 @@ public class LocalsList
         // TODO: Close upvalues.
     }
 
-    public void MarkInitialized()
-    {
-        // TODO:
-    }
-
     public void Insert(string name)
     {
         // TODO:
@@ -124,4 +122,4 @@ public class LocalsList
     }
 }
 
-public record Local(string Name, uint Depth, bool Initialized, uint Slot);
+public record Local(string Name, uint Depth, uint Slot);
