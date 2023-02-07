@@ -10,11 +10,9 @@ public class VM
     private IList<CallFrame> _frames = new List<CallFrame>();
     private Dictionary<string, Value> _globals = new();
 
-    public void Run(Function function)
+    public void Run(Closure closure)
     {
-        // var closure = new Closure(function);
-        // var function = new Function(closure);
-        Push(new Value(function));
+        Push(new Value(closure));
         CallValue(0);
 
         while (_frames.Count > 0)
@@ -69,7 +67,7 @@ public class VM
 
     private void ClosureInstruction()
     {
-        var fun = ReadFunction();
+        var fun = ReadClosure();
         Push(new Value(fun));
     }
 
@@ -84,9 +82,9 @@ public class VM
         var frameStart = _stack.Count() - (arity + 1);
         var callee = _stack[frameStart];
 
-        if (callee.ValueType == ValueType.Function)
+        if (callee.ValueType == ValueType.Closure)
         {
-            Call(callee.Function.Closure, arity);
+            Call(callee.Closure, arity);
             return;
         }
 
@@ -184,11 +182,11 @@ public class VM
         throw new Exception();
     }
 
-    private Function ReadFunction()
+    private Closure ReadClosure()
     {
-        var fun = ReadConstant();
-        Debug.Assert(fun.ValueType == ValueType.Function);
-        return fun.Function;
+        var value = ReadConstant();
+        Debug.Assert(value.ValueType == ValueType.Closure);
+        return value.Closure;
     }
 
     private string ReadString()
@@ -213,7 +211,7 @@ public class VM
 
     private CallFrame CurrentFrame() => _frames.Last();
 
-    private FunctionProto CurrentFunctionProto() => _frames.Last().Closure.FunctionProto;
+    private FunctionProto CurrentFunctionProto() => _frames.Last().Closure.Function.FunctionProto;
 
     private void Push(Value value) => _stack.Push(value);
 

@@ -14,7 +14,7 @@ var compiler = new Compiler();
 // print(bar)
 // ");
 
-var function = compiler.Compile(@"
+var closure = compiler.Compile(@"
 print(2)
 
 function foo()
@@ -33,4 +33,4 @@ bar()
 ");
 
 var vm = new VM();
-vm.Run(function);
+vm.Run(closure);

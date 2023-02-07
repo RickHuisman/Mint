@@ -2,7 +2,7 @@ namespace Mint.Compiler;
 
 public class CompilerInstance
 {
-    public Function Function = new(new Closure(new FunctionProto()));
+    public Function Function = new(new FunctionProto());
     // private Local[] Locals = new Local[byte.MaxValue]; // 256 locals max. TODO: Use fixed size array for locals.
     public LocalsList Locals = new();
     public CompilerInstance? Enclosing = null;
