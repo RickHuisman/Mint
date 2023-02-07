@@ -22,6 +22,7 @@ public class Compiler
         {
             statement.Compile(this);
         }
+        Emit(Opcode.Return);
     }
     
     public void DeclareVariable(string name)

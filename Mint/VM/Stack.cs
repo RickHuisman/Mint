@@ -1,6 +1,8 @@
+using System.Collections;
+
 namespace Mint.VM;
 
-public class Stack<T>
+public class Stack<T> : IEnumerable<T>
 {
     private readonly T[] _inner = new T[64]; // TODO: 64?
     private int _stackTop;
@@ -22,4 +24,22 @@ public class Stack<T>
     }
 
     public T First() => _inner[_stackTop - 1];
+
+    public IEnumerator<T> GetEnumerator()
+    {
+        foreach (var o in _inner)
+        {
+            if (o == null)
+            {
+                break;
+            }
+
+            yield return o;
+        }
+    }
+
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+        return GetEnumerator();
+    }
 }

@@ -6,16 +6,20 @@ namespace Mint.VM;
 
 public class VM
 {
-    private int _ip;
     private Stack<Value> _stack = new();
+    private IList<CallFrame> _frames = new List<CallFrame>();
     private Dictionary<string, Value> _globals = new();
-    private FunctionProto _functionProto;
 
     public void Run(FunctionProto functionProto)
     {
-        _functionProto = functionProto;
+        _frames.Add(new CallFrame()
+        {
+            Ip = 0,
+            StackStart = 0,
+            FunctionProto = functionProto,
+        });
 
-        while (_ip < _functionProto.Code.Count)
+        while (_frames.Count > 0)
         {
             var opcode = (Opcode) ReadByte();
             switch (opcode)
@@ -49,6 +53,9 @@ public class VM
                     break;
                 case Opcode.Pop:
                     Pop();
+                    break;
+                case Opcode.Return:
+                    Return();
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -114,6 +121,25 @@ public class VM
         Console.WriteLine(value);
     }
 
+    private void Return()
+    {
+        var frame = _frames.Last();
+        _frames.RemoveAt(_frames.Count - 1);
+        return;
+        
+        // _stack.
+        // _stack.Skip(frame.StackStart).Take(_stack.Count());
+
+        // if let Some(frame) = self.frames_mut().pop() {
+        //     let result = self.pop()?;
+        //     self.stack_mut().truncate(*frame.stack_start());
+        //     self.push(result);
+        //     return Ok(());
+        // }
+
+        throw new Exception();
+    }
+
     private string ReadString()
     {
         var name = ReadConstant();
@@ -124,18 +150,22 @@ public class VM
     private Value ReadConstant()
     {
         var index = ReadByte();
-        return _functionProto.Constants[index];
+        return CurrentFunctionProto().Constants[index];
     }
 
     private byte ReadByte()
     {
-        var b = _functionProto.Code[_ip];
-        _ip += 1;
+        var b = CurrentFunctionProto().Code[CurrentFrame().Ip];
+        CurrentFrame().Ip += 1;
         return b;
     }
 
+    private CallFrame CurrentFrame() => _frames.Last();
+
+    private FunctionProto CurrentFunctionProto() => _frames.Last().FunctionProto;
+
     private void Push(Value value) => _stack.Push(value);
-    
+
     private Value Pop() => _stack.Pop();
 
     public Value? Peek() => _stack.Peek();

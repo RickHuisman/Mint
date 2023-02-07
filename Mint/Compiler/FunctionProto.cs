@@ -43,6 +43,7 @@ public class FunctionProto
             Opcode.GetLocal => ByteInstruction(builder, "get_local", offset),
             Opcode.Print => SimpleInstruction(builder, "print", offset),
             Opcode.Pop => SimpleInstruction(builder, "pop", offset),
+            Opcode.Return => SimpleInstruction(builder, "return", offset),
             _ => throw new Exception($"Unknown opcode {instruction}")
         };
     }
