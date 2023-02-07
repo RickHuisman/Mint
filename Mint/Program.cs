@@ -15,22 +15,14 @@ var compiler = new Compiler();
 // ");
 
 var closure = compiler.Compile(@"
-print(2)
-
 function foo()
-    print(3)
+    return 5
 end
 
-function bar()
-    print(3)
-end
-
-print(4)
-foo()
-
-print(5)
-bar()
+print(foo())
 ");
+closure.Function.FunctionProto.Name = "main";
+Console.WriteLine(closure.Function.FunctionProto);
 
 var vm = new VM();
 vm.Run(closure);

@@ -9,14 +9,26 @@ public class Parser
         _tokens = tokens;
         _tokens.Reverse();
 
-        var chunk = new List<IStatement>();
+        var block = ParseBlock();
+        return new Chunk(block);
+    }
+
+    private Block ParseBlock()
+    {
+        ReturnStatement? returnStatement = null;
+        
+        var statements = new List<IStatement>();
         while (HasNext())
         {
             var statement = ParseStatement();
-            chunk.Add(statement);
+            if (statement is ReturnStatement)
+            {
+                throw new Exception("RETURNNNNNNNNNNNNNNNNNNNNNNNN!!!!!!!!!!!!!!!!!!");
+            }
+            statements.Add(statement);
         }
-        // TODO: Parse return.
-        return new Chunk(new Block(chunk, null));
+
+        return new Block(statements, returnStatement);
     }
 
     private static IStatement ParseStatement()
@@ -24,7 +36,9 @@ public class Parser
         switch (PeekType())
         {
             case TokenType.Do:
-                return ParseBlock();
+                return ParseBlock2();
+            case TokenType.Return:
+                return ParseReturn();
             case TokenType.Print:
                 return ParsePrint();
             case TokenType.Local:
@@ -44,7 +58,15 @@ public class Parser
         return new ExpressionStatement(ParseExpression());
     }
 
-    private static IStatement ParseBlock()
+    private static IStatement ParseReturn()
+    {
+        Consume(TokenType.Return, "");
+        // TODO: Check if has expression.
+        var expr = ParseExpression();
+        return new ReturnStatement(expr);
+    }
+
+    private static IStatement ParseBlock2()
     {
         Consume(TokenType.Do, "");
         var statements = new List<IStatement>();

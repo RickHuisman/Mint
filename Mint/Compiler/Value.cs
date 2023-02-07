@@ -2,6 +2,7 @@ namespace Mint.Compiler;
 
 public enum ValueType
 {
+    Nil,
     Boolean,
     Number,
     String,
@@ -15,11 +16,23 @@ public record Function(FunctionProto FunctionProto);
 
 public class Value
 {
-    public ValueType ValueType { get; }
+    public ValueType ValueType { get; private set; }
     public double Number { get; set; }
     public bool Boolean { get; set; }
     public string String { get; set; }
     public Closure Closure { get; set; }
+
+    public static Value NilValue()
+    {
+        return new Value
+        {
+            ValueType = ValueType.Nil
+        };
+    }
+
+    public Value()
+    {
+    }
 
     public Value(double number)
     {
@@ -68,10 +81,11 @@ public class Value
 
     public override string ToString()
     {
+        if (ValueType == ValueType.Nil) return "nil";
         if (ValueType == ValueType.Number) return Number.ToString();
         if (ValueType == ValueType.Boolean) return Boolean.ToString();
         if (ValueType == ValueType.String) return String;
-        if (ValueType == ValueType.Closure) return "Function(TODO)";
+        if (ValueType == ValueType.Closure) return $"Closure({Closure.Function.FunctionProto.Name})";
         throw new NotImplementedException();
     }
 }

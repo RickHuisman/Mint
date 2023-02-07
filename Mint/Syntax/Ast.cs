@@ -90,7 +90,9 @@ public record FunctionStatement(string Name, List<string> Parameters, Block Body
         
         // Create the function body.
         var fun = compiler.EndCompiler();
-        // TODO: Set arity and name.
+        fun.Function.FunctionProto.Name = Name;
+        // TODO: Set arity.
+        Console.WriteLine(fun.Function.FunctionProto);
 
         compiler.Emit(Opcode.Closure);
 
@@ -119,11 +121,19 @@ public record FunctionCallExpression(IExpression Callee, List<IExpression> Argum
     }
 }
 
-public record ReturnStatement : IStatement
+public record ReturnStatement(IExpression? Expression) : IStatement
 {
     public void Compile(Compiler.Compiler compiler)
     {
-        throw new NotImplementedException();
+        if (Expression != null)
+        {
+            Expression.Compile(compiler);
+            compiler.Emit(Opcode.Return);
+        }
+        else
+        {
+            compiler.EmitReturn();
+        }
     }
 }
 

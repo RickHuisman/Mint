@@ -23,9 +23,9 @@ public class SuiteTests
         }
     }
 
-    private void RunTest(string source)
+    private static void RunTest(string source)
     {
         var value = Mint.Interpret(source);
-        TestHelper.AreEqual(value, new Value(ValueType.Boolean, true));
+        TestHelper.AreEqual(value, new Value(true));
     }
 }

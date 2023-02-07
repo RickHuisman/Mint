@@ -6,7 +6,7 @@ namespace Mint.VM;
 
 public class VM
 {
-    private Stack<Value> _stack = new();
+    private PeekableStack<Value> _stack = new();
     private IList<CallFrame> _frames = new List<CallFrame>();
     private Dictionary<string, Value> _globals = new();
 
@@ -22,6 +22,9 @@ public class VM
             {
                 case Opcode.Add:
                     Add();
+                    break;
+                case Opcode.LoadNil:
+                    LoadNil();
                     break;
                 case Opcode.LoadConstant:
                     LoadConstant();
@@ -110,6 +113,11 @@ public class VM
         var b = Pop();
         Push(b + a);
     }
+    
+    private void LoadNil()
+    {
+        Push(Value.NilValue());
+    }
 
     private void LoadConstant()
     {
@@ -165,13 +173,14 @@ public class VM
     private void Return()
     {
         var frame = _frames.Last();
+        var result = Pop();
+        _stack.Truncate(frame.StackStart);
+        Push(result);
+        
         _frames.RemoveAt(_frames.Count - 1);
         return;
         
         // TODO:
-        // _stack.
-        // _stack.Skip(frame.StackStart).Take(_stack.Count());
-
         // if let Some(frame) = self.frames_mut().pop() {
         //     let result = self.pop()?;
         //     self.stack_mut().truncate(*frame.stack_start());

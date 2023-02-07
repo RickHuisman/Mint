@@ -1,9 +1,11 @@
-using System.Text; using Mint.VM;
+using System.Text;
+using Mint.VM;
 
 namespace Mint.Compiler;
 
 public class FunctionProto
 {
+    public string Name { get; set; }
     public List<Value> Constants = new();
     public List<byte> Code = new();
 
@@ -14,13 +16,13 @@ public class FunctionProto
     }
 
     public void Write(Opcode op) => Code.Add((byte) op);
-    
+
     public void Write(byte b) => Code.Add(b);
 
     public override string ToString()
     {
         var builder = new StringBuilder();
-        builder.AppendLine("== disarm <MAIN> ==");
+        builder.AppendLine($"== <{Name}> ==");
         for (var offset = 0; offset < Code.Count;)
         {
             offset = DisassembleInstruction(builder, offset);
@@ -28,7 +30,7 @@ public class FunctionProto
 
         return builder.ToString();
     }
-    
+
     private int DisassembleInstruction(StringBuilder builder, int offset)
     {
         builder.Append($"{offset:X4} ");
@@ -37,11 +39,13 @@ public class FunctionProto
         return instruction switch
         {
             Opcode.LoadConstant => ConstantInstruction(builder, "load_constant", offset),
+            Opcode.LoadNil => SimpleInstruction(builder, "load_nil", offset),
             Opcode.Add => SimpleInstruction(builder, "add", offset),
             Opcode.SetGlobal => ConstantInstruction(builder, "set_global", offset),
             Opcode.GetGlobal => ConstantInstruction(builder, "get_global", offset),
             Opcode.SetLocal => ByteInstruction(builder, "set_local", offset),
             Opcode.GetLocal => ByteInstruction(builder, "get_local", offset),
+            Opcode.Equal => SimpleInstruction(builder, "equal", offset),
             Opcode.Print => SimpleInstruction(builder, "print", offset),
             Opcode.Pop => SimpleInstruction(builder, "pop", offset),
             Opcode.Return => SimpleInstruction(builder, "return", offset),

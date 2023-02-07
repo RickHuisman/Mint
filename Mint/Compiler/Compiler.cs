@@ -65,8 +65,6 @@ public class Compiler
         EmitReturn();
         var funCopy = _current.Function;
 
-        Console.WriteLine(CurrentFunctionProto());
-
         if (_current.Enclosing != null)
         {
             _current = _current.Enclosing;
@@ -90,9 +88,9 @@ public class Compiler
         return CurrentFunctionProto().AddConstant(constant);
     }
 
-    private void EmitReturn()
+    public void EmitReturn()
     {
-        // TODO: Emit nil.
+        Emit(Opcode.LoadNil);
         Emit(Opcode.Return);
     }
 
