@@ -40,7 +40,7 @@ public record GlobalStatement(string Name, IExpression Value) : IStatement
         Value.Compile(compiler);
         
         compiler.Emit(Opcode.SetGlobal);
-        var constantId = compiler.AddConstant(new Value(ValueType.String, Name));
+        var constantId = compiler.AddConstant(new Value(Name));
         compiler.Emit(constantId);
     }
 }
@@ -136,7 +136,7 @@ public record NumberExpression(double Number) : IExpression
     public void Compile(Compiler.Compiler compiler)
     {
         compiler.Emit(Opcode.LoadConstant);
-        var constantId = compiler.AddConstant(new Value(ValueType.Number, Number));
+        var constantId = compiler.AddConstant(new Value(Number));
         compiler.Emit(constantId);
     }
 }

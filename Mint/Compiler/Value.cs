@@ -4,9 +4,14 @@ public enum ValueType
 {
     Boolean,
     Number,
-    String
-    // nil, boolean, number, table, function, userdata, and thread TODO
+    String,
+    Function
+    // nil, boolean, number, table, userdata, and thread TODO
 }
+
+public record Function(Closure Closure);
+
+public record Closure(FunctionProto FunctionProto);
 
 public class Value
 {
@@ -14,44 +19,51 @@ public class Value
     public double Number { get; set; }
     public bool Boolean { get; set; }
     public string String { get; set; }
+    public Function Function { get; set; }
 
-    public Value(ValueType valueType, double number)
+    public Value(double number)
     {
-        ValueType = valueType;
+        ValueType = ValueType.Number;
         Number = number;
     }
     
-    public Value(ValueType valueType, bool boolean)
+    public Value(bool boolean)
     {
-        ValueType = valueType;
+        ValueType = ValueType.Boolean;
         Boolean = boolean;
     }
     
-    public Value(ValueType valueType, string @string)
+    public Value(string @string)
     {
-        ValueType = valueType;
+        ValueType = ValueType.String;
         String = @string;
+    }
+    
+    public Value(Function function)
+    {
+        ValueType = ValueType.Function;
+        Function = function;
     }
 
     public static Value operator +(Value a, Value b)
     {
         if (a.ValueType != ValueType.Number) throw new Exception();
         if (b.ValueType != ValueType.Number) throw new Exception();
-        return new(ValueType.Number, a.Number + b.Number);
+        return new(a.Number + b.Number);
     }
     
     public static Value operator ==(Value a, Value b)
     {
         if (a.ValueType != ValueType.Number) throw new Exception();
         if (b.ValueType != ValueType.Number) throw new Exception();
-        return new(ValueType.Boolean, a.Number == b.Number);
+        return new(a.Number == b.Number);
     }
     
     public static Value operator !=(Value a, Value b)
     {
         if (a.ValueType != ValueType.Number) throw new Exception();
         if (b.ValueType != ValueType.Number) throw new Exception();
-        return new(ValueType.Boolean, a.Number != b.Number);
+        return new(a.Number != b.Number);
     }
 
     public override string ToString()

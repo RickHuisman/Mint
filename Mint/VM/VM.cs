@@ -12,12 +12,10 @@ public class VM
 
     public void Run(FunctionProto functionProto)
     {
-        _frames.Add(new CallFrame()
-        {
-            Ip = 0,
-            StackStart = 0,
-            FunctionProto = functionProto,
-        });
+        var closure = new Closure(functionProto);
+        var function = new Function(closure);
+        Push(new Value(function));
+        CallValue();
 
         while (_frames.Count > 0)
         {
@@ -61,6 +59,35 @@ public class VM
                     throw new ArgumentOutOfRangeException();
             }
         }
+    }
+
+    private void CallValue()
+    {
+        var frameStart = 0;
+        // let frame_start = self.stack.len() - (arity + 1) as usize;
+        var callee = _stack[frameStart];
+
+        if (callee.ValueType == ValueType.Function)
+        {
+            Call(callee.Function.Closure);
+            return;
+        }
+
+        throw new Exception("Invalid callee");
+    }
+
+    private void Call(Closure closure)
+    {
+        var last = _stack.Count();
+        var arity = 0;
+        var frameStart = last - (arity + 1);
+
+        _frames.Add(new CallFrame
+        {
+            Ip = 0,
+            StackStart = frameStart,
+            Closure = closure,
+        });
     }
 
     private void Add()
@@ -162,7 +189,7 @@ public class VM
 
     private CallFrame CurrentFrame() => _frames.Last();
 
-    private FunctionProto CurrentFunctionProto() => _frames.Last().FunctionProto;
+    private FunctionProto CurrentFunctionProto() => _frames.Last().Closure.FunctionProto;
 
     private void Push(Value value) => _stack.Push(value);
 
