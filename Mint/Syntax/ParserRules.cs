@@ -25,6 +25,7 @@ public static class ParserRules
             new(TokenType.RightParen, null, null, Precedence.None),
             new(TokenType.Do, null, null, Precedence.None),
             new(TokenType.Print, null, null, Precedence.None),
+            new(TokenType.Return, null, null, Precedence.None),
             new(TokenType.Name,  Parser.ParseName, null, Precedence.None),
             new(TokenType.Local,  null, null, Precedence.None),
             new(TokenType.End, null, null, Precedence.None),

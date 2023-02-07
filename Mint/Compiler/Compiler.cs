@@ -22,6 +22,8 @@ public class Compiler
         {
             statement.Compile(this);
         }
+        
+        chunk.Block.ReturnStatement.Compile(this);
     }
     
     public void DeclareVariable(string name)
@@ -62,7 +64,6 @@ public class Compiler
 
     public Closure EndCompiler()
     {
-        EmitReturn();
         var funCopy = _current.Function;
 
         if (_current.Enclosing != null)

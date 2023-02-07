@@ -15,7 +15,7 @@ public class Parser
 
     private Block ParseBlock()
     {
-        ReturnStatement? returnStatement = null;
+        var returnStatement = new ReturnStatement(null);
         
         var statements = new List<IStatement>();
         while (HasNext())

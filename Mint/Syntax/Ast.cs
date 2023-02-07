@@ -11,7 +11,7 @@ public interface IStatement
     public void Compile(Compiler.Compiler compiler);
 }
 
-public record Block(List<IStatement> Statements, ReturnStatement? ReturnStatement) : IStatement
+public record Block(List<IStatement> Statements, ReturnStatement ReturnStatement) : IStatement
 {
     public void Compile(Compiler.Compiler compiler)
     {

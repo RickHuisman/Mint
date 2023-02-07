@@ -2,21 +2,10 @@
 using Mint.VM;
 
 var compiler = new Compiler();
-// var functionProto = compiler.Compile(@"
-// local foo = 2
-//
-// do
-//     print(foo)
-//     local bar = 3
-//     print(bar)
-// end
-//
-// print(bar)
-// ");
-
 var closure = compiler.Compile(@"
 function foo()
-    return 5
+    local x = 2 + 3
+    return x
 end
 
 print(foo())
