@@ -10,12 +10,12 @@ public class VM
     private IList<CallFrame> _frames = new List<CallFrame>();
     private Dictionary<string, Value> _globals = new();
 
-    public void Run(FunctionProto functionProto)
+    public void Run(Function function)
     {
-        var closure = new Closure(functionProto);
-        var function = new Function(closure);
+        // var closure = new Closure(function);
+        // var function = new Function(closure);
         Push(new Value(function));
-        CallValue();
+        CallValue(0);
 
         while (_frames.Count > 0)
         {
@@ -55,31 +55,47 @@ public class VM
                 case Opcode.Return:
                     Return();
                     break;
+                case Opcode.Closure:
+                    ClosureInstruction();
+                    break;
+                case Opcode.Call:
+                    CallInstruction();
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
         }
     }
 
-    private void CallValue()
+    private void ClosureInstruction()
     {
-        var frameStart = 0;
-        // let frame_start = self.stack.len() - (arity + 1) as usize;
+        var fun = ReadFunction();
+        Push(new Value(fun));
+    }
+
+    private void CallInstruction()
+    {
+        var arity = ReadByte();
+        CallValue(arity);
+    }
+    
+    private void CallValue(int arity)
+    {
+        var frameStart = _stack.Count() - (arity + 1);
         var callee = _stack[frameStart];
 
         if (callee.ValueType == ValueType.Function)
         {
-            Call(callee.Function.Closure);
+            Call(callee.Function.Closure, arity);
             return;
         }
 
         throw new Exception("Invalid callee");
     }
 
-    private void Call(Closure closure)
+    private void Call(Closure closure, int arity)
     {
         var last = _stack.Count();
-        var arity = 0;
         var frameStart = last - (arity + 1);
 
         _frames.Add(new CallFrame
@@ -154,6 +170,7 @@ public class VM
         _frames.RemoveAt(_frames.Count - 1);
         return;
         
+        // TODO:
         // _stack.
         // _stack.Skip(frame.StackStart).Take(_stack.Count());
 
@@ -165,6 +182,13 @@ public class VM
         // }
 
         throw new Exception();
+    }
+
+    private Function ReadFunction()
+    {
+        var fun = ReadConstant();
+        Debug.Assert(fun.ValueType == ValueType.Function);
+        return fun.Function;
     }
 
     private string ReadString()

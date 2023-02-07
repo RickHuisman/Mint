@@ -14,11 +14,23 @@ var compiler = new Compiler();
 // print(bar)
 // ");
 
-var functionProto = compiler.Compile(@"
-2 + 3
+var function = compiler.Compile(@"
+print(2)
+
+function foo()
+    print(3)
+end
+
+function bar()
+    print(3)
+end
+
+print(4)
+foo()
+
+print(5)
+bar()
 ");
 
-Console.WriteLine(functionProto);
 var vm = new VM();
-vm.Run(functionProto);
-Console.WriteLine(vm.Peek()!);
+vm.Run(function);

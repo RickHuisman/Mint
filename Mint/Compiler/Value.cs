@@ -71,6 +71,7 @@ public class Value
         if (ValueType == ValueType.Number) return Number.ToString();
         if (ValueType == ValueType.Boolean) return Boolean.ToString();
         if (ValueType == ValueType.String) return String;
+        if (ValueType == ValueType.Function) return "Function(TODO)";
         throw new NotImplementedException();
     }
 }

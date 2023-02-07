@@ -67,15 +67,55 @@ public record FunctionStatement(string Name, List<string> Parameters, Block Body
 {
     public void Compile(Compiler.Compiler compiler)
     {
-        throw new NotImplementedException();
+        compiler.SetInstance(new CompilerInstance());
+        CompileClosure(compiler);
+        
+        // Define function name.
+        compiler.Emit(Opcode.SetGlobal);
+        var constantId = compiler.AddConstant(new Value(Name));
+        compiler.Emit(constantId);
+    }
+
+    private void CompileClosure(Compiler.Compiler compiler)
+    {
+        compiler.BeginScope();
+
+        var arity = Parameters.Count;
+        
+        // Compile arguments.
+        // TODO:
+        
+        // Compile body.
+        Body.Compile(compiler);
+        
+        // Create the function body.
+        var fun = compiler.EndCompiler();
+        // TODO: Set arity and name.
+
+        compiler.Emit(Opcode.Closure);
+
+        var constantId = compiler.AddConstant(new Value(fun));
+        compiler.Emit(constantId);
     }
 }
 
-public record FunctionCallExpression(IExpression Name, List<IExpression> Arguments) : IExpression
+public record FunctionCallExpression(IExpression Callee, List<IExpression> Arguments) : IExpression
 {
     public void Compile(Compiler.Compiler compiler)
     {
-        throw new NotImplementedException();
+        var arity = Arguments.Count;
+        
+        // Compile callee.
+        Callee.Compile(compiler);
+
+        // Compile arguments.
+        foreach (var arg in Arguments)
+        {
+            arg.Compile(compiler);
+        }
+
+        compiler.Emit(Opcode.Call);
+        compiler.Emit((byte) arity);
     }
 }
 
@@ -147,15 +187,18 @@ public record NameExpression(string Name) : IExpression
     {
         // Get local.
         var slot = compiler.ResolveLocal(Name);
-        if (slot == -1) throw new Exception();
-
-        compiler.Emit(Opcode.GetLocal);
-        compiler.Emit((byte) slot);
-        
-        // Get global.
-        // compiler.Emit(Opcode.GetGlobal);
-        // var constantId = compiler.AddConstant(new Value(ValueType.String, Name));
-        // compiler.Emit(constantId);
+        if (slot == -1)
+        {
+            // Get global.
+            compiler.Emit(Opcode.GetGlobal);
+            var constantId = compiler.AddConstant(new Value(Name));
+            compiler.Emit(constantId);
+        }
+        else
+        {
+            compiler.Emit(Opcode.GetLocal);
+            compiler.Emit((byte) slot);
+        }
     }
 }
 

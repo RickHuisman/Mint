@@ -11,6 +11,8 @@ public enum Opcode : byte
     GetGlobal,
     SetGlobal,
     Print, // TODO: Temporary opcode.
+    Closure,
+    Call,
     Return,
     Pop,
 }

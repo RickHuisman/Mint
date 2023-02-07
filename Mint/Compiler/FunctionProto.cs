@@ -20,7 +20,6 @@ public class FunctionProto
     public override string ToString()
     {
         var builder = new StringBuilder();
-        
         builder.AppendLine("== disarm <MAIN> ==");
         for (var offset = 0; offset < Code.Count;)
         {
@@ -39,11 +38,15 @@ public class FunctionProto
         {
             Opcode.LoadConstant => ConstantInstruction(builder, "load_constant", offset),
             Opcode.Add => SimpleInstruction(builder, "add", offset),
+            Opcode.SetGlobal => ConstantInstruction(builder, "set_global", offset),
+            Opcode.GetGlobal => ConstantInstruction(builder, "get_global", offset),
             Opcode.SetLocal => ByteInstruction(builder, "set_local", offset),
             Opcode.GetLocal => ByteInstruction(builder, "get_local", offset),
             Opcode.Print => SimpleInstruction(builder, "print", offset),
             Opcode.Pop => SimpleInstruction(builder, "pop", offset),
             Opcode.Return => SimpleInstruction(builder, "return", offset),
+            Opcode.Closure => ConstantInstruction(builder, "closure", offset),
+            Opcode.Call => ByteInstruction(builder, "call", offset),
             _ => throw new Exception($"Unknown opcode {instruction}")
         };
     }

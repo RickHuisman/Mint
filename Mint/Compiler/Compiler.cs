@@ -7,13 +7,13 @@ public class Compiler
 {
     private CompilerInstance _current = new();
     
-    public FunctionProto Compile(string source)
+    public Function Compile(string source)
     {
         var tokens = Lexer.Lex(source);
         var parser = new Parser();
         var ast = parser.ParseChunk(tokens);
         CompileChunk(ast);
-        return _current.Function;
+        return EndCompiler();
     }
 
     private void CompileChunk(Chunk chunk)
@@ -22,7 +22,6 @@ public class Compiler
         {
             statement.Compile(this);
         }
-        Emit(Opcode.Return);
     }
     
     public void DeclareVariable(string name)
@@ -53,6 +52,29 @@ public class Compiler
         return -1;
     }
 
+    public void SetInstance(CompilerInstance instance)
+    {
+        // TODO: Copy works?
+        var currentCopy = _current;
+        _current = instance;
+        _current.Enclosing = currentCopy;
+    }
+
+    public Function EndCompiler()
+    {
+        EmitReturn();
+        var funCopy = _current.Function;
+
+        Console.WriteLine(CurrentFunctionProto());
+
+        if (_current.Enclosing != null)
+        {
+            _current = _current.Enclosing;
+        }
+
+        return funCopy;
+    }
+
     public void BeginScope() => _current.BeginScope();
 
     public void EndScope()
@@ -65,62 +87,21 @@ public class Compiler
 
     public byte AddConstant(Value constant)
     {
-        return _current.Function.AddConstant(constant);
+        return CurrentFunctionProto().AddConstant(constant);
     }
 
-    public void Emit(Opcode opcode) => _current.Function.Write(opcode);
+    private void EmitReturn()
+    {
+        // TODO: Emit nil.
+        Emit(Opcode.Return);
+    }
+
+    public void Emit(Opcode opcode) => CurrentFunctionProto().Write(opcode);
     
-    public void Emit(byte b) => _current.Function.Write(b);
-}
+    public void Emit(byte b) => CurrentFunctionProto().Write(b);
 
-public class CompilerInstance
-{
-    public readonly FunctionProto Function = new();
-    // private Local[] Locals = new Local[byte.MaxValue]; // 256 locals max. TODO: Use fixed size array for locals.
-    public LocalsList Locals = new();
-    private readonly CompilerInstance? _enclosing;
-    private int scopeDepth { get; }
-
-    public void BeginScope() => Locals.BeginScope();
-    
-    public void EndScope() => Locals.EndScope();
-}
-
-public class LocalsList
-{
-    public List<Local> Locals = new();
-    public uint ScopeDepth { get; private set; }
-
-    public void BeginScope()
+    private FunctionProto CurrentFunctionProto()
     {
-        ScopeDepth += 1;
-    }
-
-    public void EndScope()
-    {
-        // TODO: Close upvalues.
-    }
-
-    public void Insert(string name)
-    {
-        // TODO:
-    }
-
-    public void GetAtDepth()
-    {
-        // TODO:
-    }
-    
-    public void GetAtCurrentDepth()
-    {
-        // TODO:
-    }
-
-    public Local? Get()
-    {
-        // TODO:
-        return null;
+        return _current.Function.Closure.FunctionProto;
     }
 }
-
-public record Local(string Name, uint Depth, uint Slot);

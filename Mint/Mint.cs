@@ -10,7 +10,8 @@ public static class Mint
         var functionProto = compiler.Compile(source);
 
         var vm = new VM.VM();
-        vm.Run(functionProto);
+        throw new NotImplementedException();
+        // vm.Run(functionProto);
 
         return vm.Peek();
     }
