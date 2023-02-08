@@ -3,12 +3,17 @@ using Mint.VM;
 
 var compiler = new Compiler();
 var closure = compiler.Compile(@"
+local y = 6
+
 function foo()
-    local x = 2 + 3
-    return x
+    local x = 2
+    local y = 3
+    return x + y
 end
 
-print(foo())
+local z = foo() + y
+
+print(z)
 ");
 closure.Function.FunctionProto.Name = "main";
 Console.WriteLine(closure.Function.FunctionProto);

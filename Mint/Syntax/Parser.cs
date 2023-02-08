@@ -13,18 +13,20 @@ public class Parser
         return new Chunk(block);
     }
 
-    private Block ParseBlock()
+    private static Block ParseBlock()
     {
         var returnStatement = new ReturnStatement(null);
-        
+
         var statements = new List<IStatement>();
         while (HasNext())
         {
             var statement = ParseStatement();
             if (statement is ReturnStatement)
             {
+                // TODO: Return from top level.
                 throw new Exception("RETURNNNNNNNNNNNNNNNNNNNNNNNN!!!!!!!!!!!!!!!!!!");
             }
+
             statements.Add(statement);
         }
 
@@ -52,9 +54,10 @@ public class Parser
                 {
                     return ParseGlobalStatement();
                 }
+
                 break;
         }
-        
+
         return new ExpressionStatement(ParseExpression());
     }
 
@@ -75,6 +78,7 @@ public class Parser
             var statement = ParseStatement();
             statements.Add(statement);
         }
+
         // TODO: Parse return.
         return new Block(statements, null);
     }
@@ -109,6 +113,7 @@ public class Parser
             var statement = ParseStatement();
             statements.Add(statement);
         }
+
         var block = new Block(statements, null);
         Consume(TokenType.End, "TODO");
         return new FunctionStatement(name.Source, new List<string>(), block);
@@ -162,7 +167,7 @@ public class Parser
         var value = ParseExpression();
         return new GlobalStatement(name.Source, value);
     }
-    
+
     public static IExpression ParseCall(Token token, IExpression left)
     {
         Consume(TokenType.RightParen, "TODO");
@@ -171,6 +176,18 @@ public class Parser
 
     public static IExpression ParseName(Token token)
     {
+        // TODO: Fix.
+        if (Check(TokenType.LeftParen))
+        {
+            Consume(TokenType.LeftParen, "");
+            Consume(TokenType.RightParen, "");
+            // Function call.
+            return new FunctionCallExpression(
+                new NameExpression(token.Source),
+                new List<IExpression>()
+            );
+        }
+
         return new NameExpression(token.Source);
     }
 
@@ -207,7 +224,7 @@ public class Parser
     }
 
     private static TokenType PeekType() => _tokens[^1].Type;
-    
+
     private static TokenType PeekType(int n) => _tokens[^n].Type;
 
     private static bool HasNext() => _tokens.Any();

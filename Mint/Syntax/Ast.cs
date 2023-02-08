@@ -1,6 +1,5 @@
 using Mint.Compiler;
 using Mint.VM;
-using ValueType = Mint.Compiler.ValueType;
 
 namespace Mint.Syntax;
 
@@ -20,6 +19,7 @@ public record Block(List<IStatement> Statements, ReturnStatement ReturnStatement
         {
             statement.Compile(compiler);
         }
+
         compiler.EndScope();
     }
 }
@@ -38,7 +38,7 @@ public record GlobalStatement(string Name, IExpression Value) : IStatement
     public void Compile(Compiler.Compiler compiler)
     {
         Value.Compile(compiler);
-        
+
         compiler.Emit(Opcode.SetGlobal);
         var constantId = compiler.AddConstant(new Value(Name));
         compiler.Emit(constantId);
@@ -69,7 +69,7 @@ public record FunctionStatement(string Name, List<string> Parameters, Block Body
     {
         compiler.SetInstance(new CompilerInstance());
         CompileClosure(compiler);
-        
+
         // Define function name.
         compiler.Emit(Opcode.SetGlobal);
         var constantId = compiler.AddConstant(new Value(Name));
@@ -81,13 +81,13 @@ public record FunctionStatement(string Name, List<string> Parameters, Block Body
         compiler.BeginScope();
 
         var arity = Parameters.Count;
-        
+
         // Compile arguments.
         // TODO:
-        
+
         // Compile body.
         Body.Compile(compiler);
-        
+
         // Create the function body.
         var fun = compiler.EndCompiler();
         fun.Function.FunctionProto.Name = Name;
@@ -106,7 +106,7 @@ public record FunctionCallExpression(IExpression Callee, List<IExpression> Argum
     public void Compile(Compiler.Compiler compiler)
     {
         var arity = Arguments.Count;
-        
+
         // Compile callee.
         Callee.Compile(compiler);
 

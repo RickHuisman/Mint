@@ -26,6 +26,7 @@ public static class ParserRules
             new(TokenType.Do, null, null, Precedence.None),
             new(TokenType.Print, null, null, Precedence.None),
             new(TokenType.Return, null, null, Precedence.None),
+            new(TokenType.Function, null, null, Precedence.None),
             new(TokenType.Name,  Parser.ParseName, null, Precedence.None),
             new(TokenType.Local,  null, null, Precedence.None),
             new(TokenType.End, null, null, Precedence.None),
@@ -56,9 +57,9 @@ public class ParseRule
 public enum Precedence
 {
     None,
+    Assign, // =
     Comparison, // ==
     Term, // + -
     Factor, // * / %
-    Assign, // =
     Call, // foo()
 }

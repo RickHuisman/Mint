@@ -17,7 +17,7 @@ public class ParserTests
                 BinaryOperator.Add,
                 new NumberExpression(3)
             ))
-        }, null));
+        }, new ReturnStatement(null)));
         const string source = "2 + 3";
         RunParserTest(source, expect);
     }
@@ -28,7 +28,7 @@ public class ParserTests
         var expect = new Chunk(new Block(new()
         {
             new GlobalStatement("x", new NumberExpression(10))
-        }, null));
+        }, new ReturnStatement(null)));
         const string source = @"x = 10";
         RunParserTest(source, expect);
     }
@@ -39,7 +39,7 @@ public class ParserTests
         var expect = new Chunk(new Block(new()
         {
             new LocalStatement("x", new NumberExpression(10))
-        }, null));
+        }, new ReturnStatement(null)));
         const string source = @"local x = 10";
         RunParserTest(source, expect);
     }
@@ -54,7 +54,7 @@ public class ParserTests
                 new LocalStatement("x", new NumberExpression(2)),
                 new LocalStatement("y", new NumberExpression(3))
             }, null)
-        }, null));
+        }, new ReturnStatement(null)));
         const string source = @"
 do
     x = 2
@@ -76,7 +76,7 @@ end";
                     new LocalStatement("x", new NumberExpression(10))
                 }, null)
             ),
-        }, null));
+        }, new ReturnStatement(null)));
         const string source = @"
 function foo()
     local x = 10
@@ -93,12 +93,10 @@ end
             new FunctionStatement(
                 "foo",
                 new List<string>(),
-                new Block(new List<IStatement>()
-                {
-                }, null)
+                new Block(new List<IStatement>(), null)
             ),
             new ExpressionStatement(new FunctionCallExpression(new NameExpression("foo"), new List<IExpression>()))
-        }, null));
+        }, new ReturnStatement(null)));
         const string source = @"
 function foo()
 end
