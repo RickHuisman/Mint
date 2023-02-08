@@ -64,6 +64,25 @@ public class Value
         if (b.ValueType != ValueType.Number) throw new Exception();
         return new(a.Number + b.Number);
     }
+    
+    public static Value operator -(Value a, Value b)
+    {
+        if (a.ValueType != ValueType.Number) throw new Exception();
+        if (b.ValueType != ValueType.Number) throw new Exception();
+        return new(a.Number - b.Number);
+    }
+    public static Value operator *(Value a, Value b)
+    {
+        if (a.ValueType != ValueType.Number) throw new Exception();
+        if (b.ValueType != ValueType.Number) throw new Exception();
+        return new(a.Number * b.Number);
+    }
+    public static Value operator /(Value a, Value b)
+    {
+        if (a.ValueType != ValueType.Number) throw new Exception();
+        if (b.ValueType != ValueType.Number) throw new Exception();
+        return new(a.Number / b.Number);
+    }
 
     public static Value operator ==(Value a, Value b)
     {

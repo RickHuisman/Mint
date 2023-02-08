@@ -3,17 +3,8 @@ using Mint.VM;
 
 var compiler = new Compiler();
 var closure = compiler.Compile(@"
-local y = 6
-
-function foo()
-    local x = 2
-    local y = 3
-    return x + y
-end
-
-local z = foo() + y
-
-print(z)
+x = 1 + 2 - 3 * 8 / 4
+print(x)
 ");
 closure.Function.FunctionProto.Name = "main";
 Console.WriteLine(closure.Function.FunctionProto);

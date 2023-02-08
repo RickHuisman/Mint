@@ -161,6 +161,15 @@ public record BinaryExpression(IExpression Left, BinaryOperator Operator, IExpre
             case BinaryOperator.Add:
                 compiler.Emit(Opcode.Add);
                 break;
+            case BinaryOperator.Subtract:
+                compiler.Emit(Opcode.Subtract);
+                break;
+            case BinaryOperator.Multiply:
+                compiler.Emit(Opcode.Multiply);
+                break;
+            case BinaryOperator.Divide:
+                compiler.Emit(Opcode.Divide);
+                break;
             case BinaryOperator.Equal:
                 compiler.Emit(Opcode.Equal);
                 break;

@@ -20,14 +20,23 @@ public class VM
             var opcode = (Opcode) ReadByte();
             switch (opcode)
             {
-                case Opcode.Add:
-                    Add();
-                    break;
                 case Opcode.LoadNil:
                     LoadNil();
                     break;
                 case Opcode.LoadConstant:
                     LoadConstant();
+                    break;
+                case Opcode.Add:
+                    Add();
+                    break;
+                case Opcode.Subtract:
+                    Subtract();
+                    break;
+                case Opcode.Multiply:
+                    Multiply();
+                    break;
+                case Opcode.Divide:
+                    Divide();
                     break;
                 case Opcode.Equal:
                     Equal();
@@ -79,7 +88,7 @@ public class VM
         var arity = ReadByte();
         CallValue(arity);
     }
-    
+
     private void CallValue(int arity)
     {
         var frameStart = _stack.Count() - (arity + 1);
@@ -107,13 +116,6 @@ public class VM
         });
     }
 
-    private void Add()
-    {
-        var a = Pop();
-        var b = Pop();
-        Push(b + a);
-    }
-    
     private void LoadNil()
     {
         Push(Value.NilValue());
@@ -122,6 +124,34 @@ public class VM
     private void LoadConstant()
     {
         Push(ReadConstant());
+    }
+
+    private void Add()
+    {
+        var a = Pop();
+        var b = Pop();
+        Push(b + a);
+    }
+
+    private void Subtract()
+    {
+        var a = Pop();
+        var b = Pop();
+        Push(b - a);
+    }
+
+    private void Multiply()
+    {
+        var a = Pop();
+        var b = Pop();
+        Push(b * a);
+    }
+
+    private void Divide()
+    {
+        var a = Pop();
+        var b = Pop();
+        Push(b / a);
     }
 
     private void Equal()
@@ -176,10 +206,10 @@ public class VM
         var result = Pop();
         _stack.Truncate(frame.StackStart);
         Push(result);
-        
+
         _frames.RemoveAt(_frames.Count - 1);
         return;
-        
+
         // TODO:
         // if let Some(frame) = self.frames_mut().pop() {
         //     let result = self.pop()?;

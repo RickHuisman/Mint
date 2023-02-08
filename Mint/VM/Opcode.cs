@@ -3,6 +3,9 @@ namespace Mint.VM;
 public enum Opcode : byte
 {
     Add,
+    Subtract,
+    Multiply,
+    Divide,
     LoadNil,
     LoadConstant,
     Equal,
