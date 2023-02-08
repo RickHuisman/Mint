@@ -18,6 +18,20 @@ public class Tests
         const string source = "2 3 5";
         RunLexerTest(source, expect);
     }
+    
+    [Test]
+    public void LexOperators()
+    {
+        var expect = new List<Token>
+        {
+            new(TokenType.Plus, "+"),
+            new(TokenType.Minus, "-"),
+            new(TokenType.Star, "*"),
+            new(TokenType.Slash, "/"),
+        };
+        const string source = "+ - * /";
+        RunLexerTest(source, expect);
+    }
 
     [Test]
     public void LexReservedKeywords()

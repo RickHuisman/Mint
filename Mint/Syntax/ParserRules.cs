@@ -19,6 +19,9 @@ public static class ParserRules
         {
             new(TokenType.Number, Parser.Number, null, Precedence.None),
             new(TokenType.Plus, null, Parser.Binary, Precedence.Term),
+            new(TokenType.Minus, null, Parser.Binary, Precedence.Term),
+            new(TokenType.Star, null, Parser.Binary, Precedence.Factor),
+            new(TokenType.Slash, null, Parser.Binary, Precedence.Factor),
             new(TokenType.EqualEqual, null, Parser.Binary, Precedence.Comparison),
             new(TokenType.BangEqual, null, Parser.Binary, Precedence.Comparison),
             new(TokenType.LeftParen, null, Parser.ParseCall, Precedence.Call),
@@ -27,8 +30,8 @@ public static class ParserRules
             new(TokenType.Print, null, null, Precedence.None),
             new(TokenType.Return, null, null, Precedence.None),
             new(TokenType.Function, null, null, Precedence.None),
-            new(TokenType.Name,  Parser.ParseName, null, Precedence.None),
-            new(TokenType.Local,  null, null, Precedence.None),
+            new(TokenType.Name, Parser.ParseName, null, Precedence.None),
+            new(TokenType.Local, null, null, Precedence.None),
             new(TokenType.End, null, null, Precedence.None),
         };
     }

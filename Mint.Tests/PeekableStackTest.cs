@@ -1,7 +1,7 @@
 using Mint.VM;
 using NUnit.Framework;
 
-namespace Silver.Test;
+namespace Mint.Tests;
 
 public class PeekableStackTest
 {

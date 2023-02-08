@@ -106,6 +106,20 @@ foo()
         RunParserTest(source, expect);
     }
 
+    [Test]
+    public void ParseOperators()
+    {
+        var expect = new Chunk(new Block(new()
+        {
+            new ExpressionStatement(
+                new BinaryExpression(new NumberExpression(1), BinaryOperator.Add,
+                    new BinaryExpression(new NumberExpression(2), BinaryOperator.Multiply,
+                        new BinaryExpression(new NumberExpression(3), BinaryOperator.Divide, new NumberExpression(4)))))
+        }, new ReturnStatement(null)));
+        const string source = @"1 + 2 * 3 / 4";
+        RunParserTest(source, expect);
+    }
+
     private static void RunParserTest(string source, object expect)
     {
         var tokens = Lexer.Lex(source);

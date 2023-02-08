@@ -7,12 +7,12 @@ public static class TestHelper
 {
     public static void AreEqual(object expected, object actual)
     {
-        var expectedJson = JsonConvert.SerializeObject(expected);
-        var actualJson = JsonConvert.SerializeObject(actual);
+        var expectedJson = AsJson(expected);
+        var actualJson = AsJson(actual);
         Assert.AreEqual(expectedJson, actualJson);
     }
 
-    public static string AsJson(object obj)
+    private static string AsJson(object obj)
     {
         return JsonConvert.SerializeObject(obj);
     }

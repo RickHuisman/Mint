@@ -195,7 +195,6 @@ public record NameExpression(string Name) : IExpression
 {
     public void Compile(Compiler.Compiler compiler)
     {
-        // Get local.
         var slot = compiler.ResolveLocal(Name);
         if (slot == -1)
         {
@@ -206,6 +205,7 @@ public record NameExpression(string Name) : IExpression
         }
         else
         {
+            // Get local.
             compiler.Emit(Opcode.GetLocal);
             compiler.Emit((byte) slot);
         }
@@ -215,6 +215,9 @@ public record NameExpression(string Name) : IExpression
 public enum BinaryOperator
 {
     Add,
+    Subtract,
+    Multiply,
+    Divide,
     Equal,
     NotEqual
 }
