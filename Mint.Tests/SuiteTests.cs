@@ -4,7 +4,6 @@ using System.Linq;
 using Mint.Compiler;
 using Mint.Test;
 using NUnit.Framework;
-using ValueType = Mint.Compiler.ValueType;
 
 namespace Mint.Tests;
 

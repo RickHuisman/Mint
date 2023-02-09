@@ -1,13 +1,8 @@
-﻿using Mint.Compiler;
-using Mint.VM;
+﻿using Mint.VM;
 
-var compiler = new Compiler();
-var closure = compiler.Compile(@"
-x = 1 + 2 - 3 * 8 / 4
-print(x)
-");
-closure.Function.FunctionProto.Name = "main";
-Console.WriteLine(closure.Function.FunctionProto);
-
-var vm = new VM();
-vm.Run(closure);
+const string source = @"
+x = 3
+return x == 2
+";
+var value = VM.Interpret(source);
+Console.WriteLine(value);

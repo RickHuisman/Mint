@@ -1,4 +1,2 @@
-foo = 2
-bar = 3
-foobar = foo + bar
-foobar == 5
+local x = 2
+return x == 2

@@ -21,13 +21,14 @@ public class Parser
         while (HasNext())
         {
             var statement = ParseStatement();
-            if (statement is ReturnStatement)
+            if (statement is ReturnStatement _return)
             {
-                // TODO: Return from top level.
-                throw new Exception("RETURNNNNNNNNNNNNNNNNNNNNNNNN!!!!!!!!!!!!!!!!!!");
+                returnStatement = _return;
             }
-
-            statements.Add(statement);
+            else
+            {
+                statements.Add(statement);
+            }
         }
 
         return new Block(statements, returnStatement);

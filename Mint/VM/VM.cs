@@ -10,12 +10,26 @@ public class VM
     private IList<CallFrame> _frames = new List<CallFrame>();
     private Dictionary<string, Value> _globals = new();
 
-    public void Run(Closure closure)
+    private VM()
+    {
+    }
+
+    public static Value Interpret(string source)
+    {
+        var compiler = new Compiler.Compiler();
+        var closure = compiler.Compile(source);
+        closure.Function.FunctionProto.Name = "main";
+        Console.WriteLine(closure.Function.FunctionProto);
+        var vm = new VM();
+        return vm.Run(closure);
+    }
+
+    private Value Run(Closure closure)
     {
         Push(new Value(closure));
         CallValue(0);
 
-        while (_frames.Count > 0)
+        while (_frames.Any())
         {
             var opcode = (Opcode) ReadByte();
             switch (opcode)
@@ -75,6 +89,8 @@ public class VM
                     throw new ArgumentOutOfRangeException();
             }
         }
+        
+        return Peek();
     }
 
     private void ClosureInstruction()
@@ -208,17 +224,6 @@ public class VM
         Push(result);
 
         _frames.RemoveAt(_frames.Count - 1);
-        return;
-
-        // TODO:
-        // if let Some(frame) = self.frames_mut().pop() {
-        //     let result = self.pop()?;
-        //     self.stack_mut().truncate(*frame.stack_start());
-        //     self.push(result);
-        //     return Ok(());
-        // }
-
-        throw new Exception();
     }
 
     private Closure ReadClosure()
