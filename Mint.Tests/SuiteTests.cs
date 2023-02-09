@@ -14,11 +14,12 @@ public class SuiteTests
     {
         var testFiles = Directory
             .GetFiles("/Users/rickhuisman/dev/C#/Mint/Mint.Tests/tests")
-            .Select(File.ReadAllText);
+            .Select(f => (FileName: f, Content: File.ReadAllText(f)));
 
-        foreach (var file in testFiles)
+        foreach (var (name, content) in testFiles)
         {
-            RunTest(file);
+            Console.WriteLine($"Running file: {name}");
+            RunTest(content);
         }
     }
 
