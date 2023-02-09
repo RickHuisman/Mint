@@ -19,7 +19,6 @@ public record Block(List<IStatement> Statements, ReturnStatement ReturnStatement
         {
             statement.Compile(compiler);
         }
-
         compiler.EndScope();
     }
 }
