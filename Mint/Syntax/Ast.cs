@@ -33,15 +33,26 @@ public record PrintStatement(IExpression Value) : IStatement
     }
 }
 
-public record GlobalStatement(string Name, IExpression Value) : IStatement
+public record AssignmentStatement(string Name, IExpression Value) : IStatement
 {
     public void Compile(Compiler.Compiler compiler)
     {
         Value.Compile(compiler);
-
-        compiler.Emit(Opcode.SetGlobal);
-        var constantId = compiler.AddConstant(new Value(Name));
-        compiler.Emit(constantId);
+        
+        var slot = compiler.ResolveLocal(Name);
+        if (slot == -1)
+        {
+            // Set global.
+            compiler.Emit(Opcode.SetGlobal);
+            var constantId = compiler.AddConstant(new Value(Name));
+            compiler.Emit(constantId);
+        }
+        else
+        {
+            // Set local.
+            compiler.Emit(Opcode.SetLocal);
+            compiler.Emit((byte) slot);
+        }
     }
 }
 

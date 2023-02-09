@@ -53,7 +53,7 @@ public class Parser
                 // Check if next token is a '='.
                 if (PeekType(2) == TokenType.Equal)
                 {
-                    return ParseGlobalStatement();
+                    return ParseAssignmentStatement();
                 }
 
                 break;
@@ -165,12 +165,12 @@ public class Parser
         return new BinaryExpression(left, op, right);
     }
 
-    private static IStatement ParseGlobalStatement()
+    private static IStatement ParseAssignmentStatement()
     {
         var name = Consume(TokenType.Name, "");
         Consume(TokenType.Equal, "");
         var value = ParseExpression();
-        return new GlobalStatement(name.Source, value);
+        return new AssignmentStatement(name.Source, value);
     }
 
     public static IExpression ParseCall(Token token, IExpression left)

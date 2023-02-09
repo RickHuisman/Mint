@@ -27,7 +27,7 @@ public class ParserTests
     {
         var expect = new Chunk(new Block(new()
         {
-            new GlobalStatement("x", new NumberExpression(10))
+            new AssignmentStatement("x", new NumberExpression(10))
         }, new ReturnStatement(null)));
         const string source = @"x = 10";
         RunParserTest(source, expect);
