@@ -62,7 +62,7 @@ public class Tests
             new(TokenType.Print, "print"),
             new(TokenType.Local, "local"),
             new(TokenType.Name, "custom"),
-            new(TokenType.Name, "name"),
+            new(TokenType.Name, "name")
         };
         const string source = "true false and or not break do else elseif end function goto if return print local custom name";
         RunLexerTest(source, expect);
@@ -82,6 +82,29 @@ public class Tests
         const string source = @"
 function foo()
 end
+";
+        RunLexerTest(source, expect);
+    }
+    
+    [Test]
+    public void LexComments()
+    {
+        var expect = new List<Token>
+        {
+            new(TokenType.Local, "local"),
+            new(TokenType.Name, "x"),
+            new(TokenType.Equal, "="),
+            new(TokenType.Number, "2"),
+            new(TokenType.Print, "print"),
+            new(TokenType.LeftParen, "("),
+            new(TokenType.Name, "x"),
+            new(TokenType.RightParen, ")")
+        };
+        const string source = @"
+local x = 2
+-- This is a comment
+print(x)
+-- This won't be lexed.
 ";
         RunLexerTest(source, expect);
     }

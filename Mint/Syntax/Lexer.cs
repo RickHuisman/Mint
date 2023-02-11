@@ -33,6 +33,15 @@ public static class Lexer
         if (char.IsLetter(c)) return Identifier();
         if (char.IsDigit(c)) return Number();
 
+        // if (c == '-' && Peek() == 'c')
+        // {
+        //     Advance(); // Take second '-'.
+        //     
+        //     // Advance till end of line line.
+        //     while (char.IsDigit(Peek())) Advance();
+        //
+        // }
+
         return c switch
         {
             '(' => MakeToken(TokenType.LeftParen),
@@ -110,19 +119,18 @@ public static class Lexer
     {
         while (true)
         {
+            // Check and skip comments.
+            if (Peek() == '-' && PeekNext() == '-')
+            {
+                // Advance till end of line.
+                while (Peek() != '\n' && !IsAtEnd()) Advance();
+            }
+
             if (char.IsWhiteSpace(Peek()))
             {
                 Advance();
             }
             else return;
-
-            // TODO:
-            // if (c == '/' && PeekNext() == '/')
-            // {
-            //     // A comment goes until the end of the line.
-            //     while (Peek() != '\n' && !IsAtEnd()) Advance();
-            // }
-            // else return;
         }
     }
 
