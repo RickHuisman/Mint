@@ -225,6 +225,16 @@ public record NumberExpression(double Number) : IExpression
     }
 }
 
+public record BoolExpression(bool Bool) : IExpression
+{
+    public void Compile(Compiler.Compiler compiler)
+    {
+        compiler.Emit(Opcode.LoadConstant);
+        var constantId = compiler.AddConstant(new Value(Bool));
+        compiler.Emit(constantId);
+    }
+}
+
 public record NameExpression(string Name) : IExpression
 {
     public void Compile(Compiler.Compiler compiler)

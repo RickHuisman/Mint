@@ -116,16 +116,38 @@ public class Value
 
     public static Value operator ==(Value a, Value b)
     {
-        if (a.ValueType != ValueType.Number) throw new Exception();
-        if (b.ValueType != ValueType.Number) throw new Exception();
-        return new(a.Number == b.Number);
+        if (IsNumber(a, b))
+        {
+            return new(a.Number == b.Number);
+        }
+        if (IsBool(a, b))
+        {
+            return new(a.Boolean == b.Boolean);
+        }
+        throw new Exception();
     }
 
     public static Value operator !=(Value a, Value b)
     {
-        if (a.ValueType != ValueType.Number) throw new Exception();
-        if (b.ValueType != ValueType.Number) throw new Exception();
-        return new(a.Number != b.Number);
+        if (IsNumber(a, b))
+        {
+            return new(a.Number != b.Number);
+        }
+        if (IsBool(a, b))
+        {
+            return new(a.Boolean != b.Boolean);
+        }
+        throw new Exception();
+    }
+
+    private static bool IsNumber(params Value[] values)
+    {
+        return values.All(v => v.ValueType == ValueType.Number);
+    }
+    
+    private static bool IsBool(params Value[] values)
+    {
+        return values.All(v => v.ValueType == ValueType.Boolean);
     }
 
     public override string ToString()

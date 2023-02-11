@@ -205,6 +205,12 @@ public class Parser
         return new NumberExpression(number);
     }
 
+    public static IExpression Bool(Token token)
+    {
+        var @bool = Convert.ToBoolean(token.Source);
+        return new BoolExpression(@bool);
+    }
+
     private static Token Next()
     {
         var popped = _tokens[^1];

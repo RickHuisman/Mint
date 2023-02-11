@@ -29,6 +29,8 @@ public enum TokenType
     Slash,
 
     // Reserved keywords
+    True,
+    False,
     Break,
     Do,
     Else,
@@ -52,6 +54,8 @@ public static class KeywordTranslator
     {
         return str switch
         {
+            "true" => TokenType.True,
+            "false" => TokenType.False,
             "break" => TokenType.Break,
             "do" => TokenType.Do,
             "else" => TokenType.Else,

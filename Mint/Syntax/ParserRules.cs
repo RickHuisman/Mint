@@ -18,6 +18,8 @@ public static class ParserRules
         return new List<ParseRule>
         {
             new(TokenType.Number, Parser.Number, null, Precedence.None),
+            new(TokenType.True, Parser.Bool, null, Precedence.None),
+            new(TokenType.False, Parser.Bool, null, Precedence.None),
             new(TokenType.Plus, null, Parser.Binary, Precedence.Term),
             new(TokenType.Minus, null, Parser.Binary, Precedence.Term),
             new(TokenType.Star, null, Parser.Binary, Precedence.Factor),
