@@ -172,12 +172,14 @@ public class Parser
 
     public static IExpression Or(Token token, IExpression left)
     {
-        throw new NotImplementedException();
+        var right = ParsePrecedence(Precedence.And);
+        return new OrExpression(left, right);
     }
     
     public static IExpression And(Token token, IExpression left)
     {
-        throw new NotImplementedException();
+        var right = ParsePrecedence(Precedence.And);
+        return new AndExpression(left, right);
     }
 
     public static IExpression Binary(Token token, IExpression left)

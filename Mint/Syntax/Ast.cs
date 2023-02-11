@@ -271,6 +271,37 @@ public record NameExpression(string Name) : IExpression
     }
 }
 
+public record AndExpression(IExpression Left, IExpression Right) : IExpression
+{
+    public void Compile(Compiler.Compiler compiler)
+    {
+        Left.Compile(compiler);
+        var endJump = compiler.EmitJump(Opcode.JumpIfFalse);
+        compiler.Emit(Opcode.Pop);
+        
+        Right.Compile(compiler);
+        compiler.PatchJump(endJump);
+    }
+}
+
+public record OrExpression(IExpression Left, IExpression Right) : IExpression
+{
+    public void Compile(Compiler.Compiler compiler)
+    {
+        Left.Compile(compiler);
+        
+        var elseJump = compiler.EmitJump(Opcode.JumpIfFalse);
+        var endJump = compiler.EmitJump(Opcode.Jump);
+
+        compiler.PatchJump(elseJump);
+        compiler.Emit(Opcode.Pop);
+        
+        Right.Compile(compiler);
+
+        compiler.PatchJump(endJump);
+    }
+}
+
 public record IfElseStatement(IExpression Condition, Block Then, Block? Else) : IStatement
 {
     public void Compile(Compiler.Compiler compiler)
@@ -281,10 +312,7 @@ public record IfElseStatement(IExpression Condition, Block Then, Block? Else) : 
         var thenJump = compiler.EmitJump(Opcode.JumpIfFalse);
         compiler.Emit(Opcode.Pop);
 
-        // TODO: Compile then as block?
-        foreach (var expr in Then.Statements) {
-            expr.Compile(compiler);
-        }
+        Then.Compile(compiler);
 
         var elseJump = compiler.EmitJump(Opcode.Jump);
 
@@ -293,12 +321,6 @@ public record IfElseStatement(IExpression Condition, Block Then, Block? Else) : 
 
         // Compile else clause if set.
         Else?.Compile(compiler);
-        
-        // if let Some(exprs) = else_ {
-        //     for expr in exprs {
-        //         compile_expr(compiler, expr);
-        //     }
-        // }
 
         compiler.PatchJump(elseJump);
     }

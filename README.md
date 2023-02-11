@@ -8,8 +8,6 @@ Work in progress. Currently support for functions, local and global variables.
 * For
 * Goto
 * Garbage Collection
-* If
-* Else
 * Elseif
 * Repeat
 * Until
