@@ -7,7 +7,7 @@ public class Compiler
 {
     private CompilerInstance _current = new();
     
-    public Closure Compile(string source)
+    public Function Compile(string source)
     {
         var tokens = Lexer.Lex(source);
         var parser = new Parser();
@@ -62,7 +62,7 @@ public class Compiler
         _current.Enclosing = currentCopy;
     }
 
-    public Closure EndCompiler()
+    public Function EndCompiler()
     {
         var funCopy = _current.Function;
 
@@ -71,7 +71,7 @@ public class Compiler
             _current = _current.Enclosing;
         }
 
-        return new Closure(funCopy);
+        return funCopy;
     }
 
     public void BeginScope() => _current.BeginScope();

@@ -150,7 +150,6 @@ public class Parser
     public static IExpression Binary(Token token, IExpression left)
     {
         var rule = ParserRules.GetRule(token.Type);
-        // var right = ParsePrecedence(rule.Precedence + 1);
         var right = ParsePrecedence(rule.Precedence);
         var op = token.Type switch
         {
@@ -160,6 +159,10 @@ public class Parser
             TokenType.Slash => BinaryOperator.Divide,
             TokenType.EqualEqual => BinaryOperator.Equal,
             TokenType.BangEqual => BinaryOperator.NotEqual,
+            TokenType.GreaterThan => BinaryOperator.Greater,
+            TokenType.GreaterThanEqual => BinaryOperator.GreaterThanEqual,
+            TokenType.LessThan => BinaryOperator.Less,
+            TokenType.LessThanEqual => BinaryOperator.LessThanEqual,
             _ => throw new NotImplementedException()
         };
         return new BinaryExpression(left, op, right);

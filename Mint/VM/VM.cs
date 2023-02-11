@@ -17,16 +17,16 @@ public class VM
     public static Value Interpret(string source)
     {
         var compiler = new Compiler.Compiler();
-        var closure = compiler.Compile(source);
-        closure.Function.FunctionProto.Name = "main";
-        Console.WriteLine(closure.Function.FunctionProto);
+        var function = compiler.Compile(source);
+        function.FunctionProto.Name = "main";
+        Console.WriteLine(function.FunctionProto);
         var vm = new VM();
-        return vm.Run(closure);
+        return vm.Run(function);
     }
 
-    private Value Run(Closure closure)
+    private Value Run(Function function)
     {
-        Push(new Value(closure));
+        Push(new Value(function));
         CallValue(0);
 
         while (_frames.Any())
@@ -55,8 +55,14 @@ public class VM
                 case Opcode.Equal:
                     Equal();
                     break;
-                case Opcode.NotEqual:
-                    NotEqual();
+                case Opcode.Not:
+                    Not();
+                    break;
+                case Opcode.Greater:
+                    Greater();
+                    break;
+                case Opcode.Less:
+                    Less();
                     break;
                 case Opcode.SetLocal:
                     SetLocal();
@@ -95,7 +101,7 @@ public class VM
 
     private void ClosureInstruction()
     {
-        var fun = ReadClosure();
+        var fun = ReadFunction();
         Push(new Value(fun));
     }
 
@@ -110,9 +116,9 @@ public class VM
         var frameStart = _stack.Count() - (arity + 1);
         var callee = _stack[frameStart];
 
-        if (callee.ValueType == ValueType.Closure)
+        if (callee.ValueType == ValueType.Function)
         {
-            Call(callee.Closure, arity);
+            Call(new Closure(callee.Function), arity);
             return;
         }
 
@@ -144,44 +150,57 @@ public class VM
 
     private void Add()
     {
-        var a = Pop();
         var b = Pop();
-        Push(b + a);
+        var a = Pop();
+        Push(a + b);
     }
 
     private void Subtract()
     {
-        var a = Pop();
         var b = Pop();
-        Push(b - a);
+        var a = Pop();
+        Push(a - b);
     }
 
     private void Multiply()
     {
-        var a = Pop();
         var b = Pop();
-        Push(b * a);
+        var a = Pop();
+        Push(a * b);
     }
 
     private void Divide()
     {
-        var a = Pop();
         var b = Pop();
-        Push(b / a);
+        var a = Pop();
+        Push(a / b);
     }
 
     private void Equal()
     {
-        var a = Pop();
         var b = Pop();
+        var a = Pop();
         Push(a == b);
     }
 
-    private void NotEqual()
+    private void Not()
     {
         var a = Pop();
+        Push(!a);
+    }
+
+    private void Greater()
+    {
         var b = Pop();
-        Push(a != b);
+        var a = Pop();
+        Push(a > b);
+    }
+
+    private void Less()
+    {
+        var b = Pop();
+        var a = Pop();
+        Push(a < b);
     }
 
     private void SetLocal()
@@ -226,11 +245,11 @@ public class VM
         _frames.RemoveAt(_frames.Count - 1);
     }
 
-    private Closure ReadClosure()
+    private Function ReadFunction()
     {
         var value = ReadConstant();
-        Debug.Assert(value.ValueType == ValueType.Closure);
-        return value.Closure;
+        Debug.Assert(value.ValueType == ValueType.Function);
+        return value.Function;
     }
 
     private string ReadString()

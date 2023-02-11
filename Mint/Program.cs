@@ -2,8 +2,9 @@
 
 const string source = @"
 local a = 2
-a = a + 2
-print(a)
+local b = 3
+print(a > b)
+print(a < b)
 ";
 var value = VM.Interpret(source);
 Console.WriteLine(value);

@@ -100,9 +100,9 @@ public record FunctionStatement(string Name, List<string> Parameters, Block Body
 
         // Create the function body.
         var fun = compiler.EndCompiler();
-        fun.Function.FunctionProto.Name = Name;
+        fun.FunctionProto.Name = Name;
         // TODO: Set arity.
-        Console.WriteLine(fun.Function.FunctionProto);
+        Console.WriteLine(fun.FunctionProto);
 
         compiler.Emit(Opcode.Closure);
 
@@ -184,7 +184,22 @@ public record BinaryExpression(IExpression Left, BinaryOperator Operator, IExpre
                 compiler.Emit(Opcode.Equal);
                 break;
             case BinaryOperator.NotEqual:
-                compiler.Emit(Opcode.NotEqual);
+                compiler.Emit(Opcode.Equal);
+                compiler.Emit(Opcode.Not);
+                break;
+            case BinaryOperator.Greater:
+                compiler.Emit(Opcode.Greater);
+                break;
+            case BinaryOperator.GreaterThanEqual:
+                compiler.Emit(Opcode.Less);
+                compiler.Emit(Opcode.Not);
+                break;
+            case BinaryOperator.Less:
+                compiler.Emit(Opcode.Less);
+                break;
+            case BinaryOperator.LessThanEqual:
+                compiler.Emit(Opcode.Greater);
+                compiler.Emit(Opcode.Not);
                 break;
             default:
                 throw new ArgumentOutOfRangeException();
@@ -238,7 +253,11 @@ public enum BinaryOperator
     Multiply,
     Divide,
     Equal,
-    NotEqual
+    NotEqual,
+    Greater,
+    GreaterThanEqual,
+    Less,
+    LessThanEqual
 }
 
 public enum UnaryOperator

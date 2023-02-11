@@ -2,14 +2,16 @@ namespace Mint.VM;
 
 public enum Opcode : byte
 {
+    LoadNil,
+    LoadConstant,
     Add,
     Subtract,
     Multiply,
     Divide,
-    LoadNil,
-    LoadConstant,
     Equal,
-    NotEqual,
+    Not,
+    Greater,
+    Less,
     SetLocal,
     GetLocal,
     GetGlobal,
@@ -18,5 +20,5 @@ public enum Opcode : byte
     Closure,
     Call,
     Return,
-    Pop,
+    Pop
 }

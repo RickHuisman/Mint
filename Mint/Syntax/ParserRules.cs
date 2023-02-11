@@ -22,8 +22,12 @@ public static class ParserRules
             new(TokenType.Minus, null, Parser.Binary, Precedence.Term),
             new(TokenType.Star, null, Parser.Binary, Precedence.Factor),
             new(TokenType.Slash, null, Parser.Binary, Precedence.Factor),
-            new(TokenType.EqualEqual, null, Parser.Binary, Precedence.Comparison),
-            new(TokenType.BangEqual, null, Parser.Binary, Precedence.Comparison),
+            new(TokenType.EqualEqual, null, Parser.Binary, Precedence.Equality),
+            new(TokenType.BangEqual, null, Parser.Binary, Precedence.Equality),
+            new(TokenType.GreaterThan, null, Parser.Binary, Precedence.Comparison),
+            new(TokenType.GreaterThanEqual, null, Parser.Binary, Precedence.Comparison),
+            new(TokenType.LessThan, null, Parser.Binary, Precedence.Comparison),
+            new(TokenType.LessThanEqual, null, Parser.Binary, Precedence.Comparison),
             new(TokenType.LeftParen, null, Parser.ParseCall, Precedence.Call),
             new(TokenType.RightParen, null, null, Precedence.None),
             new(TokenType.Do, null, null, Precedence.None),
@@ -61,7 +65,8 @@ public enum Precedence
 {
     None,
     Assign, // =
-    Comparison, // ==
+    Equality, // == !=
+    Comparison, // >= <= > <
     Term, // + -
     Factor, // * / %
     Call, // foo()
