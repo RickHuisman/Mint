@@ -47,7 +47,8 @@ public static class Lexer
             '/' => MakeToken(TokenType.Slash),
             '*' => MakeToken(TokenType.Star),
             '%' => MakeToken(TokenType.Percent),
-            '!' => MakeToken(Match('=') ? TokenType.BangEqual : TokenType.Bang),
+            '!' => MakeToken(TokenType.Bang),
+            '~' => MakeToken(Match('=') ? TokenType.TildeEqual : throw new Exception()), // TODO: Fix.
             '=' => MakeToken(Match('=') ? TokenType.EqualEqual : TokenType.Equal),
             '<' => MakeToken(Match('=') ? TokenType.LessThanEqual : TokenType.LessThan),
             '>' => MakeToken(Match('=') ? TokenType.GreaterThanEqual : TokenType.GreaterThan),

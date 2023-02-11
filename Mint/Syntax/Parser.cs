@@ -115,9 +115,12 @@ public class Parser
         
         // Else branch.
         Block? @else = null;
-        if (Match(TokenType.Else))
+        if (HasNext())
         {
-            @else = ParseBlock2();
+            if (Match(TokenType.Else))
+            {
+                @else = ParseBlock2();
+            }
         }
         return new IfElseStatement(condition, then, @else);
     }
@@ -188,7 +191,7 @@ public class Parser
             TokenType.Star => BinaryOperator.Multiply,
             TokenType.Slash => BinaryOperator.Divide,
             TokenType.EqualEqual => BinaryOperator.Equal,
-            TokenType.BangEqual => BinaryOperator.NotEqual,
+            TokenType.TildeEqual => BinaryOperator.NotEqual,
             TokenType.GreaterThan => BinaryOperator.Greater,
             TokenType.GreaterThanEqual => BinaryOperator.GreaterThanEqual,
             TokenType.LessThan => BinaryOperator.Less,

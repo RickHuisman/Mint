@@ -94,6 +94,22 @@ public class Compiler
         Emit(Opcode.LoadNil);
         Emit(Opcode.Return);
     }
+    
+    public int EmitJump(Opcode opcode) {
+        Emit(opcode);
+        Emit(0xff);
+        Emit(0xff);
+        return CurrentFunctionProto().Code.Count - 2;
+    }
+    
+    public void PatchJump(int offset)
+    {
+        // -2 to adjust for the bytecode for the jump offset itself.
+        var jump = CurrentFunctionProto().Code.Count - offset - 2;
+
+        CurrentFunctionProto().Code[offset] = (byte)((jump >> 8) & 0xff);
+        CurrentFunctionProto().Code[offset + 1] = (byte)(jump & 0xff);
+    }
 
     public void Emit(Opcode opcode) => CurrentFunctionProto().Write(opcode);
     

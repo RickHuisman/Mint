@@ -275,7 +275,32 @@ public record IfElseStatement(IExpression Condition, Block Then, Block? Else) : 
 {
     public void Compile(Compiler.Compiler compiler)
     {
-        throw new NotImplementedException();
+        Condition.Compile(compiler);
+        
+        // Jump to else clause if false.
+        var thenJump = compiler.EmitJump(Opcode.JumpIfFalse);
+        compiler.Emit(Opcode.Pop);
+
+        // TODO: Compile then as block?
+        foreach (var expr in Then.Statements) {
+            expr.Compile(compiler);
+        }
+
+        var elseJump = compiler.EmitJump(Opcode.Jump);
+
+        compiler.PatchJump(thenJump);
+        compiler.Emit(Opcode.Pop);
+
+        // Compile else clause if set.
+        Else?.Compile(compiler);
+        
+        // if let Some(exprs) = else_ {
+        //     for expr in exprs {
+        //         compile_expr(compiler, expr);
+        //     }
+        // }
+
+        compiler.PatchJump(elseJump);
     }
 }
 

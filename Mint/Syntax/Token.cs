@@ -19,7 +19,7 @@ public enum TokenType
 
     // One or two character tokens
     Bang,
-    BangEqual,
+    TildeEqual,
     Equal,
     EqualEqual,
     LessThan,

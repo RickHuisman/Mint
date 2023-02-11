@@ -29,7 +29,7 @@ public static class ParserRules
             new(TokenType.Star, null, Parser.Binary, Precedence.Factor),
             new(TokenType.Slash, null, Parser.Binary, Precedence.Factor),
             new(TokenType.EqualEqual, null, Parser.Binary, Precedence.Equality),
-            new(TokenType.BangEqual, null, Parser.Binary, Precedence.Equality),
+            new(TokenType.TildeEqual, null, Parser.Binary, Precedence.Equality),
             new(TokenType.GreaterThan, null, Parser.Binary, Precedence.Comparison),
             new(TokenType.GreaterThanEqual, null, Parser.Binary, Precedence.Comparison),
             new(TokenType.LessThan, null, Parser.Binary, Precedence.Comparison),

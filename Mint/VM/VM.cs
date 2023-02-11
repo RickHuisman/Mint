@@ -97,11 +97,17 @@ public class VM
                 case Opcode.Call:
                     CallInstruction();
                     break;
+                case Opcode.Jump:
+                    Jump();
+                    break;
+                case Opcode.JumpIfFalse:
+                    JumpIfFalse();
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
         }
-        
+
         PrintStack();
         return Peek();
     }
@@ -248,6 +254,18 @@ public class VM
         Console.WriteLine(value);
     }
 
+    private void Jump()
+    {
+        var offset = ReadShort();
+        CurrentFrame().Ip += offset;
+    }
+
+    private void JumpIfFalse()
+    {
+        var offset = ReadShort();
+        if (Peek().IsFalsey()) CurrentFrame().Ip += offset;
+    }
+
     private void Return()
     {
         var frame = _frames.Last();
@@ -285,6 +303,13 @@ public class VM
         return b;
     }
 
+    private ushort ReadShort()
+    {
+        CurrentFrame().Ip += 2;
+        return (ushort) ((CurrentFunctionProto().Code[CurrentFrame().Ip - 2] << 8) |
+                         CurrentFunctionProto().Code[CurrentFrame().Ip - 1]);
+    }
+
     private CallFrame CurrentFrame() => _frames.Last();
 
     private FunctionProto CurrentFunctionProto() => _frames.Last().Closure.Function.FunctionProto;
@@ -302,6 +327,7 @@ public class VM
         {
             Console.WriteLine($"{i} - {_stack[i]}");
         }
+
         Console.WriteLine("===========\n");
     }
 }

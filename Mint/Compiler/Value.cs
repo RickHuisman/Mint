@@ -155,6 +155,16 @@ public class Value
     {
         return values.All(v => v.ValueType == ValueType.Boolean);
     }
+    
+    private static bool IsNil(params Value[] values)
+    {
+        return values.All(v => v.ValueType == ValueType.Nil);
+    }
+    
+    public bool IsFalsey()
+    {
+        return IsNil(this) || IsBool(this) && !Boolean;
+    }
 
     public override string ToString()
     {

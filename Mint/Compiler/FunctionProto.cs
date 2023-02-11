@@ -58,6 +58,8 @@ public class FunctionProto
             Opcode.Return => SimpleInstruction(builder, "return", offset),
             Opcode.Closure => ConstantInstruction(builder, "closure", offset),
             Opcode.Call => ByteInstruction(builder, "call", offset),
+            Opcode.Jump => JumpInstruction(builder, "jump", 1, offset),
+            Opcode.JumpIfFalse => JumpInstruction(builder, "jump_if_false", 1, offset),
             _ => throw new Exception($"Unknown opcode {instruction}")
         };
     }
@@ -82,5 +84,12 @@ public class FunctionProto
         var constant = Code[offset + 1];
         builder.AppendLine($"{name,-16} '{slot}'");
         return offset + 2;
+    }
+
+    private int JumpInstruction(StringBuilder builder, string name, int sign, int offset)
+    {
+        var jump = (ushort) ((Code[offset + 1] << 8) | Code[offset + 2]);
+        builder.AppendLine($"{name,-16} {offset,4:X} -> {offset + 3 + sign * jump,4:X}");
+        return offset + 3;
     }
 }

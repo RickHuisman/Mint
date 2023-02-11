@@ -20,6 +20,8 @@ public enum Opcode : byte
     Print, // TODO: Temporary opcode.
     Closure,
     Call,
+    Jump,
+    JumpIfFalse,
     Return,
     Pop
 }
