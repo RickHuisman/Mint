@@ -38,6 +38,7 @@ public static class ParserRules
             new(TokenType.RightParen, null, null, Precedence.None),
             new(TokenType.If, null, null, Precedence.None),
             new(TokenType.Then, null, null, Precedence.None),
+            new(TokenType.Else, null, null, Precedence.None),
             new(TokenType.Do, null, null, Precedence.None),
             new(TokenType.Print, null, null, Precedence.None),
             new(TokenType.Return, null, null, Precedence.None),

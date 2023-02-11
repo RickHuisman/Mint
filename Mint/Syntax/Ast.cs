@@ -271,7 +271,7 @@ public record NameExpression(string Name) : IExpression
     }
 }
 
-public record IfStatement(IExpression Condition, Block Then, Block? Else) : IStatement
+public record IfElseStatement(IExpression Condition, Block Then, Block? Else) : IStatement
 {
     public void Compile(Compiler.Compiler compiler)
     {

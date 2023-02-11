@@ -48,7 +48,7 @@ public class Parser
                 // TODO: Check for local function.
                 return ParseLocalStatement();
             case TokenType.If:
-                return ParseIfStatement();
+                return ParseIfElseStatement();
             case TokenType.Function:
                 return ParseFunctionStatement();
             case TokenType.Name:
@@ -76,7 +76,7 @@ public class Parser
     {
         Match(TokenType.Do);
         var statements = new List<IStatement>();
-        while (!Match(TokenType.End))
+        while (!Match(TokenType.End) && !Check(TokenType.Else))
         {
             var statement = ParseStatement();
             statements.Add(statement);
@@ -104,7 +104,7 @@ public class Parser
         return new LocalStatement(name.Source, value);
     }
 
-    private static IStatement ParseIfStatement()
+    private static IStatement ParseIfElseStatement()
     {
         Consume(TokenType.If, "");
         var condition = ParsePrecedence(Precedence.Assign);
@@ -113,9 +113,13 @@ public class Parser
         Consume(TokenType.Then, "");
         var then = ParseBlock2();
         
-        // // Else branch.
-        // Consume(TokenType.Else, "");
-        return new IfStatement(condition, then, null);
+        // Else branch.
+        Block? @else = null;
+        if (Match(TokenType.Else))
+        {
+            @else = ParseBlock2();
+        }
+        return new IfElseStatement(condition, then, @else);
     }
     
     private static IStatement ParseFunctionStatement()

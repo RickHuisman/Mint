@@ -121,18 +121,53 @@ foo()
     }
 
     [Test]
-    public void ParseIf()
+    public void ParseIfInline()
     {
-        // Inline if statement.
         var expect = new Chunk(new Block(new()
         {
-            new IfStatement(new BinaryExpression(new NameExpression("x"), BinaryOperator.Less, new NumberExpression(0)),
-                new Block(new List<IStatement>()
+            new IfElseStatement(new BinaryExpression(new NameExpression("x"), BinaryOperator.Less, new NumberExpression(0)),
+                new Block(new List<IStatement>
                 {
                     new AssignmentStatement("x", new NumberExpression(0))
                 }, null), null)
         }, new ReturnStatement(null)));
         const string source = @"if x < 0 then x = 0 end";
+        RunParserTest(source, expect);
+    }
+
+    [Test]
+    public void ParseIfMultiLine()
+    {
+        var expect = new Chunk(new Block(new()
+        {
+            new IfElseStatement(new BinaryExpression(new NameExpression("x"), BinaryOperator.Greater, new NameExpression("y")),
+                new Block(new List<IStatement>
+                {
+                    new AssignmentStatement("x", new NumberExpression(0))
+                }, null), null)
+        }, new ReturnStatement(null)));
+        const string source = @"
+if x > y then
+    x = 0
+end";
+        RunParserTest(source, expect);
+    }
+    
+    [Test]
+    public void ParseIfElse()
+    {
+        var expect = new Chunk(new Block(new()
+        {
+            new IfElseStatement(new BinaryExpression(new NameExpression("x"), BinaryOperator.Less, new NameExpression("y")),
+                new Block(new List<IStatement>
+                {
+                    new ReturnStatement(new NameExpression("x"))
+                }, null), new Block(new List<IStatement>
+                {
+                    new ReturnStatement(new NameExpression("y"))
+                }, null))
+        }, new ReturnStatement(null)));
+        const string source = @"if x < y then return x else return y end";
         RunParserTest(source, expect);
     }
 
