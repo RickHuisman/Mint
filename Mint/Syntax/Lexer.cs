@@ -33,15 +33,6 @@ public static class Lexer
         if (char.IsLetter(c)) return Identifier();
         if (char.IsDigit(c)) return Number();
 
-        // if (c == '-' && Peek() == 'c')
-        // {
-        //     Advance(); // Take second '-'.
-        //     
-        //     // Advance till end of line line.
-        //     while (char.IsDigit(Peek())) Advance();
-        //
-        // }
-
         return c switch
         {
             '(' => MakeToken(TokenType.LeftParen),

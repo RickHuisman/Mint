@@ -37,19 +37,21 @@ public enum TokenType
     Not,
     Break,
     Do,
+    If,
+    Then,
     Else,
     ElseIf,
+    Goto,
     End,
     Function,
-    Goto,
-    If,
     Local,
     Return,
     Print, // TODO: Temporary keyword.
     
+    // Values
     Name,
     String,
-    Number,
+    Number
 }
 
 public static class KeywordTranslator
@@ -66,12 +68,13 @@ public static class KeywordTranslator
             "not" => TokenType.Not,
             "break" => TokenType.Break,
             "do" => TokenType.Do,
+            "if" => TokenType.If,
+            "then" => TokenType.Then,
             "else" => TokenType.Else,
             "elseif" => TokenType.ElseIf,
+            "goto" => TokenType.Goto,
             "end" => TokenType.End,
             "function" => TokenType.Function,
-            "goto" => TokenType.Goto,
-            "if" => TokenType.If,
             "local" => TokenType.Local,
             "return" => TokenType.Return,
             "print" => TokenType.Print,

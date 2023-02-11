@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using Mint.Compiler;
 using ValueType = Mint.Compiler.ValueType;
+using DebugAssert = System.Diagnostics.Debug;
 
 namespace Mint.VM;
 
@@ -9,18 +10,20 @@ public class VM
     private PeekableStack<Value> _stack = new();
     private IList<CallFrame> _frames = new List<CallFrame>();
     private Dictionary<string, Value> _globals = new();
+    private bool Debug;
 
-    private VM()
+    private VM(bool debug)
     {
+        Debug = debug;
     }
 
-    public static Value Interpret(string source)
+    public static Value Interpret(string source, bool debug = false)
     {
         var compiler = new Compiler.Compiler();
         var function = compiler.Compile(source);
         function.FunctionProto.Name = "main";
         Console.WriteLine(function.FunctionProto);
-        var vm = new VM();
+        var vm = new VM(debug);
         return vm.Run(function);
     }
 
@@ -99,6 +102,7 @@ public class VM
             }
         }
         
+        PrintStack();
         return Peek();
     }
 
@@ -257,14 +261,14 @@ public class VM
     private Function ReadFunction()
     {
         var value = ReadConstant();
-        Debug.Assert(value.ValueType == ValueType.Function);
+        DebugAssert.Assert(value.ValueType == ValueType.Function);
         return value.Function;
     }
 
     private string ReadString()
     {
         var name = ReadConstant();
-        Debug.Assert(name.ValueType == ValueType.String);
+        DebugAssert.Assert(name.ValueType == ValueType.String);
         return name.String;
     }
 
@@ -290,4 +294,14 @@ public class VM
     private Value Pop() => _stack.Pop();
 
     public Value? Peek() => _stack.Peek();
+
+    public void PrintStack()
+    {
+        Console.WriteLine("== Stack ==");
+        for (var i = _stack.Count() - 1; i >= 0; i--)
+        {
+            Console.WriteLine($"{i} - {_stack[i]}");
+        }
+        Console.WriteLine("===========\n");
+    }
 }

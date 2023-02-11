@@ -36,6 +36,8 @@ public static class ParserRules
             new(TokenType.LessThanEqual, null, Parser.Binary, Precedence.Comparison),
             new(TokenType.LeftParen, null, Parser.ParseCall, Precedence.Call),
             new(TokenType.RightParen, null, null, Precedence.None),
+            new(TokenType.If, null, null, Precedence.None),
+            new(TokenType.Then, null, null, Precedence.None),
             new(TokenType.Do, null, null, Precedence.None),
             new(TokenType.Print, null, null, Precedence.None),
             new(TokenType.Return, null, null, Precedence.None),

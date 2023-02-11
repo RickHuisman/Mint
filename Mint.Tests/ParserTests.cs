@@ -120,6 +120,22 @@ foo()
         RunParserTest(source, expect);
     }
 
+    [Test]
+    public void ParseIf()
+    {
+        // Inline if statement.
+        var expect = new Chunk(new Block(new()
+        {
+            new IfStatement(new BinaryExpression(new NameExpression("x"), BinaryOperator.Less, new NumberExpression(0)),
+                new Block(new List<IStatement>()
+                {
+                    new AssignmentStatement("x", new NumberExpression(0))
+                }, null), null)
+        }, new ReturnStatement(null)));
+        const string source = @"if x < 0 then x = 0 end";
+        RunParserTest(source, expect);
+    }
+
     private static void RunParserTest(string source, object expect)
     {
         var tokens = Lexer.Lex(source);

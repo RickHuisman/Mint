@@ -52,19 +52,20 @@ public class Tests
             new(TokenType.Not, "not"),
             new(TokenType.Break, "break"),
             new(TokenType.Do, "do"),
+            new(TokenType.If, "if"),
+            new(TokenType.Then, "then"),
             new(TokenType.Else, "else"),
             new(TokenType.ElseIf, "elseif"),
             new(TokenType.End, "end"),
             new(TokenType.Function, "function"),
             new(TokenType.Goto, "goto"),
-            new(TokenType.If, "if"),
             new(TokenType.Return, "return"),
             new(TokenType.Print, "print"),
             new(TokenType.Local, "local"),
             new(TokenType.Name, "custom"),
             new(TokenType.Name, "name")
         };
-        const string source = "true false and or not break do else elseif end function goto if return print local custom name";
+        const string source = "true false and or not break do if then else elseif end function goto return print local custom name";
         RunLexerTest(source, expect);
     }
 
