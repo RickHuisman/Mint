@@ -180,7 +180,12 @@ public class Parser
 
     public static IExpression Unary(Token token)
     {
-        var op = UnaryOperator.Not;
+        var op = token.Type switch
+        {
+            TokenType.Not => UnaryOperator.Not,
+            TokenType.Minus => UnaryOperator.Negate,
+            _ => throw new ArgumentOutOfRangeException()
+        };
         var expr = ParsePrecedence(Precedence.Unary);
         return new UnaryExpression(op, expr);
     }

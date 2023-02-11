@@ -50,6 +50,7 @@ public class FunctionProto
             Opcode.GetLocal => ByteInstruction(builder, "get_local", offset),
             Opcode.Equal => SimpleInstruction(builder, "equal", offset),
             Opcode.Not => SimpleInstruction(builder, "not", offset),
+            Opcode.Negate => SimpleInstruction(builder, "negate", offset),
             Opcode.Greater => SimpleInstruction(builder, "greater", offset),
             Opcode.Less => SimpleInstruction(builder, "less", offset),
             Opcode.Print => SimpleInstruction(builder, "print", offset),

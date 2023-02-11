@@ -10,6 +10,7 @@ public enum Opcode : byte
     Divide,
     Equal,
     Not,
+    Negate,
     Greater,
     Less,
     SetLocal,

@@ -24,7 +24,7 @@ public static class ParserRules
             new(TokenType.And, null, Parser.And, Precedence.And),
             new(TokenType.Not, Parser.Unary, null, Precedence.Unary),
             new(TokenType.Plus, null, Parser.Binary, Precedence.Term),
-            new(TokenType.Minus, null, Parser.Binary, Precedence.Term),
+            new(TokenType.Minus, Parser.Unary, Parser.Binary, Precedence.Term),
             new(TokenType.Star, null, Parser.Binary, Precedence.Factor),
             new(TokenType.Slash, null, Parser.Binary, Precedence.Factor),
             new(TokenType.EqualEqual, null, Parser.Binary, Precedence.Equality),

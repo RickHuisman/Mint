@@ -58,6 +58,9 @@ public class VM
                 case Opcode.Not:
                     Not();
                     break;
+                case Opcode.Negate:
+                    Negate();
+                    break;
                 case Opcode.Greater:
                     Greater();
                     break;
@@ -187,6 +190,12 @@ public class VM
     {
         var a = Pop();
         Push(!a);
+    }
+
+    private void Negate()
+    {
+        var a = Pop();
+        Push(-a);
     }
 
     private void Greater()

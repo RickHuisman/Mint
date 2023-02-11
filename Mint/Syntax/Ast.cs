@@ -212,7 +212,13 @@ public record UnaryExpression(UnaryOperator Operator, IExpression Left) : IExpre
     public void Compile(Compiler.Compiler compiler)
     {
         Left.Compile(compiler);
-        compiler.Emit(Opcode.Not);
+        var opcode = Operator switch
+        {
+            UnaryOperator.Not => Opcode.Not,
+            UnaryOperator.Negate => Opcode.Negate,
+            _ => throw new ArgumentOutOfRangeException()
+        };
+        compiler.Emit(opcode);
     }
 }
 

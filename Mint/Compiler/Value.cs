@@ -114,6 +114,12 @@ public class Value
         throw new Exception();
     }
 
+    public static Value operator -(Value a)
+    {
+        if (IsNumber(a)) return new Value(-a.Number);
+        throw new Exception();
+    }
+
     public static Value operator ==(Value a, Value b)
     {
         if (IsNumber(a, b))
