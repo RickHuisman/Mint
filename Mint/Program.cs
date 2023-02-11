@@ -1,9 +1,7 @@
 ﻿using Mint.VM;
 
 const string source = @"
-local a = true
-local b = false
-print(a == b)
+print(not true)
 ";
 var value = VM.Interpret(source);
 Console.WriteLine(value);

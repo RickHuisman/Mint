@@ -147,6 +147,16 @@ public class Parser
         return expr;
     }
 
+    public static IExpression Or(Token token, IExpression left)
+    {
+        throw new NotImplementedException();
+    }
+    
+    public static IExpression And(Token token, IExpression left)
+    {
+        throw new NotImplementedException();
+    }
+
     public static IExpression Binary(Token token, IExpression left)
     {
         var rule = ParserRules.GetRule(token.Type);
@@ -166,6 +176,13 @@ public class Parser
             _ => throw new NotImplementedException()
         };
         return new BinaryExpression(left, op, right);
+    }
+
+    public static IExpression Unary(Token token)
+    {
+        var op = UnaryOperator.Not;
+        var expr = ParsePrecedence(Precedence.Unary);
+        return new UnaryExpression(op, expr);
     }
 
     private static IStatement ParseAssignmentStatement()

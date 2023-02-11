@@ -211,7 +211,8 @@ public record UnaryExpression(UnaryOperator Operator, IExpression Left) : IExpre
 {
     public void Compile(Compiler.Compiler compiler)
     {
-        throw new NotImplementedException();
+        Left.Compile(compiler);
+        compiler.Emit(Opcode.Not);
     }
 }
 
@@ -272,4 +273,6 @@ public enum BinaryOperator
 
 public enum UnaryOperator
 {
+    Not,
+    Negate
 }
