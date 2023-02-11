@@ -1,8 +1,7 @@
 ﻿using Mint.VM;
 
 const string source = @"
-print(not true)
-print(-5)
+print(not not nil)
 ";
 var value = VM.Interpret(source);
 Console.WriteLine(value);

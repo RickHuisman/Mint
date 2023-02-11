@@ -15,7 +15,7 @@ public enum ValueType
     Boolean,
     Number,
     String,
-    Function // TODO: Change to Function.
+    Function
     // TODO: Implement: table, userdata, and thread value types.
 }
 

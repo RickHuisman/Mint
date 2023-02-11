@@ -242,6 +242,14 @@ public record BoolExpression(bool Bool) : IExpression
     }
 }
 
+public record NilExpression : IExpression
+{
+    public void Compile(Compiler.Compiler compiler)
+    {
+        compiler.Emit(Opcode.LoadNil);
+    }
+}
+
 public record NameExpression(string Name) : IExpression
 {
     public void Compile(Compiler.Compiler compiler)

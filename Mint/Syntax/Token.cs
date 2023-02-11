@@ -31,6 +31,7 @@ public enum TokenType
     // Reserved keywords
     True,
     False,
+    Nil,
     And,
     Or,
     Not,
@@ -59,6 +60,7 @@ public static class KeywordTranslator
         {
             "true" => TokenType.True,
             "false" => TokenType.False,
+            "nil" => TokenType.Nil,
             "and" => TokenType.And,
             "or" => TokenType.Or,
             "not" => TokenType.Not,

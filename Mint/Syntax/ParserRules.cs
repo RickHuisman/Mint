@@ -20,6 +20,7 @@ public static class ParserRules
             new(TokenType.Number, Parser.Number, null, Precedence.None),
             new(TokenType.True, Parser.Bool, null, Precedence.None),
             new(TokenType.False, Parser.Bool, null, Precedence.None),
+            new(TokenType.Nil, Parser.Nil, null, Precedence.None),
             new(TokenType.Or, null, Parser.Or, Precedence.Or),
             new(TokenType.And, null, Parser.And, Precedence.And),
             new(TokenType.Not, Parser.Unary, null, Precedence.Unary),

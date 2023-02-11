@@ -233,6 +233,11 @@ public class Parser
         return new BoolExpression(@bool);
     }
 
+    public static IExpression Nil(Token token)
+    {
+        return new NilExpression();
+    }
+
     private static Token Next()
     {
         var popped = _tokens[^1];
