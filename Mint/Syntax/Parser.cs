@@ -145,23 +145,23 @@ public class Parser
 
     private static IExpression ParseExpression()
     {
-        return ParsePrecedence(Precedence.None + 1);
+        return ParsePrecedence(Precedence.Assign);
     }
 
     private static IExpression ParsePrecedence(Precedence precedence)
     {
         var token = Next();
-        var prefixRule = ParserRules.GetRule(token.Type).Prefix;
+        var prefixRule = GetRule(token.Type).Prefix;
         if (prefixRule == null) throw new Exception("Expected expression");
 
         var expr = prefixRule(token);
 
         if (HasNext()) // TODO: Cleanup.
         {
-            while (precedence <= ParserRules.GetRule(PeekType()).Precedence)
+            while (precedence <= GetRule(PeekType()).Precedence)
             {
                 token = Next();
-                var infixRule = ParserRules.GetRule(token.Type).Infix;
+                var infixRule = GetRule(token.Type).Infix;
                 if (infixRule == null) throw new Exception("Expected expression");
                 return infixRule(token, expr);
             }
@@ -170,15 +170,22 @@ public class Parser
         return expr;
     }
 
+    private static ParseRule GetRule(TokenType tokenType)
+    {
+        return ParserRules.GetRule(tokenType);
+    }
+
     public static IExpression Or(Token token, IExpression left)
     {
-        var right = ParsePrecedence(Precedence.And);
+        var rule = ParserRules.GetRule(token.Type);
+        var right = ParsePrecedence(rule.Precedence);
         return new OrExpression(left, right);
     }
     
     public static IExpression And(Token token, IExpression left)
     {
-        var right = ParsePrecedence(Precedence.And);
+        var rule = ParserRules.GetRule(token.Type);
+        var right = ParsePrecedence(rule.Precedence);
         return new AndExpression(left, right);
     }
 
@@ -198,6 +205,8 @@ public class Parser
             TokenType.GreaterThanEqual => BinaryOperator.GreaterThanEqual,
             TokenType.LessThan => BinaryOperator.Less,
             TokenType.LessThanEqual => BinaryOperator.LessThanEqual,
+            TokenType.And => BinaryOperator.And,
+            TokenType.Or => BinaryOperator.Or,
             _ => throw new NotImplementedException()
         };
         return new BinaryExpression(left, op, right);

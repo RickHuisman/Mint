@@ -1,13 +1,21 @@
 # Mint: A Lua VM
-Work in progress. Currently support for functions, local and global variables.
+Work in progress.
+
+### Done
+* Functions
+* Local variables
+* Global variables
+* Arithmetic operators
+* Logical operators (and, or, not)
 
 ### TODO
 * Closures
-* Tables
 * While
 * For
 * Goto
-* Garbage Collection
 * Elseif
 * Repeat
 * Until
+* Tables
+* Strings
+* Garbage Collection

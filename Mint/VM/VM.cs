@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using Mint.Compiler;
 using ValueType = Mint.Compiler.ValueType;
 using DebugAssert = System.Diagnostics.Debug;
@@ -10,11 +9,9 @@ public class VM
     private PeekableStack<Value> _stack = new();
     private IList<CallFrame> _frames = new List<CallFrame>();
     private Dictionary<string, Value> _globals = new();
-    private bool Debug;
 
-    private VM(bool debug)
+    private VM()
     {
-        Debug = debug;
     }
 
     public static Value Interpret(string source, bool debug = false)
@@ -22,8 +19,8 @@ public class VM
         var compiler = new Compiler.Compiler();
         var function = compiler.Compile(source);
         function.FunctionProto.Name = "main";
-        Console.WriteLine(function.FunctionProto);
-        var vm = new VM(debug);
+        if (debug) Console.WriteLine(function.FunctionProto);
+        var vm = new VM();
         return vm.Run(function);
     }
 
@@ -272,7 +269,6 @@ public class VM
         var result = Pop();
         _stack.Truncate(frame.StackStart);
         Push(result);
-
         _frames.RemoveAt(_frames.Count - 1);
     }
 

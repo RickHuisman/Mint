@@ -9,40 +9,42 @@ public class Tests
     [Test]
     public void LexNumerals()
     {
+        const string source = "1 2 3.45";
         var expect = new List<Token>
         {
+            new(TokenType.Number, "1"),
             new(TokenType.Number, "2"),
-            new(TokenType.Number, "3"),
-            new(TokenType.Number, "5"),
+            new(TokenType.Number, "3.45"),
         };
-        const string source = "2 3 5";
         RunLexerTest(source, expect);
     }
-    
+
     [Test]
     public void LexOperators()
     {
+        const string source = "+ - * / == ~= > >= < <=";
         var expect = new List<Token>
         {
             new(TokenType.Plus, "+"),
             new(TokenType.Minus, "-"),
             new(TokenType.Star, "*"),
             new(TokenType.Slash, "/"),
-            // new(TokenType.EqualEqual, "=="),
-            // new(TokenType.BangEqual, "!="),
-            // new(TokenType.GreaterThan, ">"),
-            // new(TokenType.GreaterThanEqual, ">="),
-            // new(TokenType.LessThan, "<="),
-            // new(TokenType.LessThanEqual, "<="),
+            new(TokenType.EqualEqual, "=="),
+            new(TokenType.TildeEqual, "~="),
+            new(TokenType.GreaterThan, ">"),
+            new(TokenType.GreaterThanEqual, ">="),
+            new(TokenType.LessThan, "<"),
+            new(TokenType.LessThanEqual, "<="),
         };
-        // TODO: Fix.
-        // const string source = "+ - * / == != > >= < <=";
-        // RunLexerTest(source, expect);
+        RunLexerTest(source, expect);
     }
 
     [Test]
     public void LexReservedKeywords()
     {
+        const string source = @"true false and or not break do if then
+                                else elseif end function goto return print
+                                local custom name";
         var expect = new List<Token>
         {
             new(TokenType.True, "true"),
@@ -65,13 +67,16 @@ public class Tests
             new(TokenType.Name, "custom"),
             new(TokenType.Name, "name")
         };
-        const string source = "true false and or not break do if then else elseif end function goto return print local custom name";
         RunLexerTest(source, expect);
     }
 
     [Test]
     public void LexFunction()
     {
+        const string source = @"
+function foo()
+end
+";
         var expect = new List<Token>
         {
             new(TokenType.Function, "function"),
@@ -80,16 +85,18 @@ public class Tests
             new(TokenType.RightParen, ")"),
             new(TokenType.End, "end"),
         };
-        const string source = @"
-function foo()
-end
-";
         RunLexerTest(source, expect);
     }
-    
+
     [Test]
     public void LexComments()
     {
+        const string source = @"
+local x = 2
+-- This is a comment
+print(x)
+-- This won't be lexed.
+";
         var expect = new List<Token>
         {
             new(TokenType.Local, "local"),
@@ -101,12 +108,6 @@ end
             new(TokenType.Name, "x"),
             new(TokenType.RightParen, ")")
         };
-        const string source = @"
-local x = 2
--- This is a comment
-print(x)
--- This won't be lexed.
-";
         RunLexerTest(source, expect);
     }
 

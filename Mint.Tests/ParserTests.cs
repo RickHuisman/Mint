@@ -125,7 +125,8 @@ foo()
     {
         var expect = new Chunk(new Block(new()
         {
-            new IfElseStatement(new BinaryExpression(new NameExpression("x"), BinaryOperator.Less, new NumberExpression(0)),
+            new IfElseStatement(
+                new BinaryExpression(new NameExpression("x"), BinaryOperator.Less, new NumberExpression(0)),
                 new Block(new List<IStatement>
                 {
                     new AssignmentStatement("x", new NumberExpression(0))
@@ -140,7 +141,8 @@ foo()
     {
         var expect = new Chunk(new Block(new()
         {
-            new IfElseStatement(new BinaryExpression(new NameExpression("x"), BinaryOperator.Greater, new NameExpression("y")),
+            new IfElseStatement(
+                new BinaryExpression(new NameExpression("x"), BinaryOperator.Greater, new NameExpression("y")),
                 new Block(new List<IStatement>
                 {
                     new AssignmentStatement("x", new NumberExpression(0))
@@ -152,13 +154,14 @@ if x > y then
 end";
         RunParserTest(source, expect);
     }
-    
+
     [Test]
     public void ParseIfElse()
     {
         var expect = new Chunk(new Block(new()
         {
-            new IfElseStatement(new BinaryExpression(new NameExpression("x"), BinaryOperator.Less, new NameExpression("y")),
+            new IfElseStatement(
+                new BinaryExpression(new NameExpression("x"), BinaryOperator.Less, new NameExpression("y")),
                 new Block(new List<IStatement>
                 {
                     new ReturnStatement(new NameExpression("x"))
@@ -168,6 +171,30 @@ end";
                 }, null))
         }, new ReturnStatement(null)));
         const string source = @"if x < y then return x else return y end";
+        RunParserTest(source, expect);
+    }
+
+    [Test]
+    public void ParseAnd()
+    {
+        var expect = new Chunk(new Block(new()
+        {
+            new ExpressionStatement(
+                new AndExpression(new BoolExpression(true), new BoolExpression(false)))
+        }, new ReturnStatement(null)));
+        const string source = @"true and false";
+        RunParserTest(source, expect);
+    }
+
+    [Test]
+    public void ParseOr()
+    {
+        var expect = new Chunk(new Block(new()
+        {
+            new ExpressionStatement(
+                new OrExpression(new BoolExpression(true), new BoolExpression(false)))
+        }, new ReturnStatement(null)));
+        const string source = @"true or false";
         RunParserTest(source, expect);
     }
 

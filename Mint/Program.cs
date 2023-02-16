@@ -1,12 +1,7 @@
 ﻿using Mint.VM;
 
 const string source = @"
-local y = 0
-if true and true then
-    x = 2
-end
-
-return x == 2 and true
+return 1 + 2 and false
 ";
 var value = VM.Interpret(source, true);
 Console.WriteLine(value);

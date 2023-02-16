@@ -23,5 +23,7 @@ public enum Opcode : byte
     Jump,
     JumpIfFalse,
     Return,
+    And,
+    Or,
     Pop
 }

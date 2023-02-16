@@ -79,7 +79,7 @@ public enum Precedence
     Equality, // == !=
     Comparison, // >= <= > <
     Term, // + -
-    Factor, // * / %
+    Factor, // * /
     Unary, // not -
     Call, // foo()
 }

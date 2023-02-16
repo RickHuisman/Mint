@@ -55,6 +55,8 @@ public class FunctionProto
             Opcode.Less => SimpleInstruction(builder, "less", offset),
             Opcode.Print => SimpleInstruction(builder, "print", offset),
             Opcode.Pop => SimpleInstruction(builder, "pop", offset),
+            Opcode.And => SimpleInstruction(builder, "and", offset),
+            Opcode.Or => SimpleInstruction(builder, "or", offset),
             Opcode.Return => SimpleInstruction(builder, "return", offset),
             Opcode.Closure => ConstantInstruction(builder, "closure", offset),
             Opcode.Call => ByteInstruction(builder, "call", offset),

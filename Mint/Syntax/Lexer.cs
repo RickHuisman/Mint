@@ -2,6 +2,7 @@ namespace Mint.Syntax;
 
 public static class Lexer
 {
+    private static int _start;
     private static int _current;
     private static string _source = "";
 
@@ -28,6 +29,8 @@ public static class Lexer
 
         if (IsAtEnd()) return null;
 
+        _start = _current;
+
         var c = Advance();
 
         if (char.IsLetter(c)) return Identifier();
@@ -52,20 +55,19 @@ public static class Lexer
             '=' => MakeToken(Match('=') ? TokenType.EqualEqual : TokenType.Equal),
             '<' => MakeToken(Match('=') ? TokenType.LessThanEqual : TokenType.LessThan),
             '>' => MakeToken(Match('=') ? TokenType.GreaterThanEqual : TokenType.GreaterThan),
-            '"' => String(),
             _ => throw new UnexpectedChar(c)
         };
     }
 
     private static Token Identifier()
     {
-        var start = _current - 1;
-        while (char.IsLetter(Peek()) || char.IsDigit(Peek())) Advance();
-
-        var identifier = _source[start.._current];
-        var identifierType = KeywordTranslator.FromString(identifier);
-
-        return new Token(identifierType, identifier);
+        while (char.IsLetter(Peek()) || char.IsDigit(Peek()))
+        {
+            Advance();
+        }
+        var source = _source[_start.._current];
+        var identifierType = KeywordTranslator.FromString(source);
+        return new Token(identifierType, source);
     }
 
     private static Token Number()
@@ -74,7 +76,7 @@ public static class Lexer
         while (char.IsDigit(Peek())) Advance();
 
         // Look for a fractional part
-        if (Peek() == '.' && char.IsDigit(PeekNext()))
+        if (Check('.') && char.IsDigit(PeekNext()))
         {
             // Consume the "."
             Advance();
@@ -85,54 +87,38 @@ public static class Lexer
         return new Token(TokenType.Number, _source[start.._current]);
     }
 
-    private static Token String()
-    {
-        var start = _current;
-        while (Peek() != '"' && !IsAtEnd()) Advance();
-
-        if (IsAtEnd()) throw new UnterminatedStringException();
-
-        var end = _current;
-
-        // The closing quote
-        Advance();
-
-        return new Token(TokenType.String, _source[start..end]);
-    }
-
     private static Token MakeToken(TokenType type)
     {
-        var c = _source[_current - 1];
-        var token = new Token(type, c.ToString());
-        return token;
+        return new Token(type, _source[_start.._current]);
     }
 
     private static void SkipWhitespace()
     {
         while (true)
         {
-            // Check and skip comments.
-            if (Peek() == '-' && PeekNext() == '-')
+            // Skip comments.
+            if (Check('-') && PeekNext() == '-')
             {
                 // Advance till end of line.
-                while (Peek() != '\n' && !IsAtEnd()) Advance();
+                while (!Check('\n')) Advance();
             }
 
-            if (char.IsWhiteSpace(Peek()))
-            {
-                Advance();
-            }
+            if (char.IsWhiteSpace(Peek())) Advance();
             else return;
         }
     }
-
+    
     private static bool Match(char expected)
     {
+        var match = Check(expected);
+        if (match) Advance();
+        return match;
+    }
+    
+    private static bool Check(char expected)
+    {
         if (IsAtEnd()) return false;
-        if (_source[_current] != expected) return false;
-
-        Advance();
-        return true;
+        return _source[_current] == expected;
     }
 
     private static char PeekNext()
@@ -153,5 +139,9 @@ public static class Lexer
 
     private static bool IsAtEnd() => _current >= _source.Length;
 
-    private static void ResetLexer() => _current = 0;
+    private static void ResetLexer()
+    { 
+        _start = 0;   
+        _current = 0;   
+    }
 }

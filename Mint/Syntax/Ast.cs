@@ -201,6 +201,12 @@ public record BinaryExpression(IExpression Left, BinaryOperator Operator, IExpre
                 compiler.Emit(Opcode.Greater);
                 compiler.Emit(Opcode.Not);
                 break;
+            case BinaryOperator.And:
+                compiler.Emit(Opcode.And);
+                break;
+            case BinaryOperator.Or:
+                compiler.Emit(Opcode.Or);
+                break;
             default:
                 throw new ArgumentOutOfRangeException();
         }
@@ -337,7 +343,9 @@ public enum BinaryOperator
     Greater,
     GreaterThanEqual,
     Less,
-    LessThanEqual
+    LessThanEqual,
+    And,
+    Or
 }
 
 public enum UnaryOperator
