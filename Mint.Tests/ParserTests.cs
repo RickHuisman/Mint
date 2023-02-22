@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using Mint.Syntax;
-using Mint.Test;
 using NUnit.Framework;
 
 namespace Mint.Tests;
@@ -171,6 +170,22 @@ end";
                 }, null))
         }, new ReturnStatement(null)));
         const string source = @"if x < y then return x else return y end";
+        RunParserTest(source, expect);
+    }
+    
+    [Test]
+    public void ParseReturn()
+    {
+        const string source = @"return";
+        var expect = new Chunk(new Block(new(), new ReturnStatement(null)));
+        RunParserTest(source, expect);
+    }
+    
+    [Test]
+    public void ParseReturnWithValue()
+    {
+        const string source = @"return 5";
+        var expect = new Chunk(new Block(new(), new ReturnStatement(new NumberExpression(5))));
         RunParserTest(source, expect);
     }
 

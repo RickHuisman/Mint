@@ -56,7 +56,6 @@ public class Compiler
 
     public void SetInstance(CompilerInstance instance)
     {
-        // TODO: Copy works?
         var currentCopy = _current;
         _current = instance;
         _current.Enclosing = currentCopy;
@@ -104,7 +103,7 @@ public class Compiler
     
     public void PatchJump(int offset)
     {
-        // -2 to adjust for the bytecode for the jump offset itself.
+        // -2 to adjust for the jump offset itself.
         var jump = CurrentFunctionProto().Code.Count - offset - 2;
 
         CurrentFunctionProto().Code[offset] = (byte)((jump >> 8) & 0xff);

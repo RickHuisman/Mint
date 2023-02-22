@@ -1,7 +1,7 @@
 using Newtonsoft.Json;
 using NUnit.Framework;
 
-namespace Mint.Test;
+namespace Mint.Tests;
 
 public static class TestHelper
 {
@@ -12,8 +12,5 @@ public static class TestHelper
         Assert.AreEqual(expectedJson, actualJson);
     }
 
-    private static string AsJson(object obj)
-    {
-        return JsonConvert.SerializeObject(obj);
-    }
+    private static string AsJson(object obj) => JsonConvert.SerializeObject(obj);
 }

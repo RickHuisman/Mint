@@ -2,7 +2,6 @@ using System;
 using System.IO;
 using System.Linq;
 using Mint.Compiler;
-using Mint.Test;
 using NUnit.Framework;
 
 namespace Mint.Tests;

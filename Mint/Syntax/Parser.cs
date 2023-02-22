@@ -16,9 +16,8 @@ public class Parser
     private static Block ParseBlock()
     {
         var returnStatement = new ReturnStatement(null);
-
         var statements = new List<IStatement>();
-        while (HasNext())
+        while (!IsAtEnd())
         {
             var statement = ParseStatement();
             if (statement is ReturnStatement _return)
@@ -67,9 +66,12 @@ public class Parser
     private static IStatement ParseReturn()
     {
         Consume(TokenType.Return, "");
-        // TODO: Check if has expression.
-        var expr = ParseExpression();
-        return new ReturnStatement(expr);
+        if (IsAtEnd()) return new ReturnStatement(null);
+        if (Check(TokenType.End, TokenType.Else, TokenType.ElseIf))
+        {
+            return new ReturnStatement(null);
+        }
+        return new ReturnStatement(ParseExpression());
     }
 
     private static Block ParseBlock2()
@@ -115,7 +117,7 @@ public class Parser
         
         // Else branch.
         Block? @else = null;
-        if (HasNext())
+        if (!IsAtEnd())
         {
             if (Match(TokenType.Else))
             {
@@ -156,7 +158,7 @@ public class Parser
 
         var expr = prefixRule(token);
 
-        if (HasNext()) // TODO: Cleanup.
+        if (!IsAtEnd()) // TODO: Cleanup.
         {
             while (precedence <= GetRule(PeekType()).Precedence)
             {
@@ -302,5 +304,5 @@ public class Parser
 
     private static TokenType PeekType(int n) => _tokens[^n].Type;
 
-    private static bool HasNext() => _tokens.Any();
+    private static bool IsAtEnd() => !_tokens.Any();
 }
