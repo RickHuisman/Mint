@@ -9,12 +9,6 @@ public class Parser
         _tokens = tokens;
         _tokens.Reverse();
 
-        var block = ParseBlock();
-        return new Chunk(block);
-    }
-
-    private static Block ParseBlock()
-    {
         var returnStatement = new ReturnStatement(null);
         var statements = new List<IStatement>();
         while (!IsAtEnd())
@@ -30,7 +24,8 @@ public class Parser
             }
         }
 
-        return new Block(statements, returnStatement);
+        var block = new Block(statements, returnStatement);
+        return new Chunk(block);
     }
 
     private static IStatement ParseStatement()
@@ -38,7 +33,7 @@ public class Parser
         switch (PeekType())
         {
             case TokenType.Do:
-                return ParseBlock2();
+                return ParseBlock();
             case TokenType.Return:
                 return ParseReturn();
             case TokenType.Print:
@@ -74,18 +69,28 @@ public class Parser
         return new ReturnStatement(ParseExpression());
     }
 
-    private static Block ParseBlock2()
+    private static Block ParseBlock()
     {
         Match(TokenType.Do);
         var statements = new List<IStatement>();
+
+        ReturnStatement? returnStatement = null;
         while (!Match(TokenType.End) && !Check(TokenType.Else))
         {
             var statement = ParseStatement();
-            statements.Add(statement);
+            
+            if (statement is ReturnStatement _return)
+            {
+                returnStatement = _return;
+            }
+            else
+            {
+                statements.Add(statement);
+            }
         }
 
         // TODO: Parse return.
-        return new Block(statements, null);
+        return new Block(statements, returnStatement);
     }
 
     private static IStatement ParsePrint()
@@ -113,7 +118,7 @@ public class Parser
         
         // Then branch.
         Consume(TokenType.Then, "");
-        var then = ParseBlock2();
+        var then = ParseBlock();
         
         // Else branch.
         Block? @else = null;
@@ -121,7 +126,7 @@ public class Parser
         {
             if (Match(TokenType.Else))
             {
-                @else = ParseBlock2();
+                @else = ParseBlock();
             }
         }
         return new IfElseStatement(condition, then, @else);

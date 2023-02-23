@@ -157,22 +157,17 @@ end";
     [Test]
     public void ParseIfElse()
     {
+        const string source = @"if x < y then return x else return y end";
         var expect = new Chunk(new Block(new()
         {
             new IfElseStatement(
                 new BinaryExpression(new NameExpression("x"), BinaryOperator.Less, new NameExpression("y")),
-                new Block(new List<IStatement>
-                {
-                    new ReturnStatement(new NameExpression("x"))
-                }, null), new Block(new List<IStatement>
-                {
-                    new ReturnStatement(new NameExpression("y"))
-                }, null))
+                new Block(new List<IStatement>(), new ReturnStatement(new NameExpression("x")))
+                , new Block(new List<IStatement>(), new ReturnStatement(new NameExpression("y"))))
         }, new ReturnStatement(null)));
-        const string source = @"if x < y then return x else return y end";
         RunParserTest(source, expect);
     }
-    
+
     [Test]
     public void ParseReturn()
     {
@@ -180,12 +175,25 @@ end";
         var expect = new Chunk(new Block(new(), new ReturnStatement(null)));
         RunParserTest(source, expect);
     }
-    
+
     [Test]
     public void ParseReturnWithValue()
     {
         const string source = @"return 5";
         var expect = new Chunk(new Block(new(), new ReturnStatement(new NumberExpression(5))));
+        RunParserTest(source, expect);
+    }
+
+    [Test]
+    public void ParseReturnInBlock()
+    {
+        const string source = @"do
+    return 5
+end";
+        var expect = new Chunk(new Block(new()
+        {
+            new Block(new List<IStatement>(), new ReturnStatement(new NumberExpression(5)))
+        }, new ReturnStatement(null)));
         RunParserTest(source, expect);
     }
 
