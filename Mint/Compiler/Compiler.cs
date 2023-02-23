@@ -1,4 +1,4 @@
-using Mint.Syntax;
+using Mint.Parser;
 using Mint.VM;
 
 namespace Mint.Compiler;
@@ -10,9 +10,8 @@ public class Compiler
     public Function Compile(string source)
     {
         var tokens = Lexer.Lex(source);
-        var parser = new Parser();
-        var ast = parser.ParseChunk(tokens);
-        CompileChunk(ast);
+        // var ast = Parser.ParseChunk(tokens);
+        // CompileChunk(ast);
         return EndCompiler();
     }
 
@@ -20,10 +19,10 @@ public class Compiler
     {
         foreach (var statement in chunk.Block.Statements)
         {
-            statement.Compile(this);
+            // statement.Compile(this); TODO
         }
         
-        chunk.Block.ReturnStatement.Compile(this);
+        // chunk.Block.ReturnStatement.Compile(this); TODO
     }
     
     public void DeclareVariable(string name)

@@ -1,4 +1,4 @@
-namespace Mint.Syntax;
+namespace Mint.Parser;
 
 public record Token(TokenType Type, string Source);
 

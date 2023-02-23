@@ -1,8 +1,7 @@
 using System.Collections.Generic;
-using Mint.Syntax;
 using NUnit.Framework;
 
-namespace Mint.Tests;
+namespace Mint.Parser.Tests;
 
 public class Tests
 {

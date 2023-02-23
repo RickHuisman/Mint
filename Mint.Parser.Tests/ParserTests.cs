@@ -1,8 +1,7 @@
 using System.Collections.Generic;
-using Mint.Syntax;
 using NUnit.Framework;
 
-namespace Mint.Tests;
+namespace Mint.Parser.Tests;
 
 public class ParserTests
 {
@@ -224,8 +223,7 @@ end";
     private static void RunParserTest(string source, object expect)
     {
         var tokens = Lexer.Lex(source);
-        var parser = new Parser();
-        var actual = parser.ParseChunk(tokens);
+        var actual = Parser.ParseChunk(tokens);
         TestHelper.AreEqual(expect, actual);
     }
 }

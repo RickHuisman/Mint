@@ -1,10 +1,10 @@
-namespace Mint.Syntax;
+namespace Mint.Parser;
 
 public class Parser
 {
     private static List<Token> _tokens;
 
-    public Chunk ParseChunk(List<Token> tokens)
+    public static Chunk ParseChunk(List<Token> tokens)
     {
         _tokens = tokens;
         _tokens.Reverse();
@@ -39,7 +39,6 @@ public class Parser
             case TokenType.Print:
                 return ParsePrint();
             case TokenType.Local:
-                // TODO: Check for local function.
                 return ParseLocalStatement();
             case TokenType.If:
                 return ParseIfElseStatement();
@@ -51,7 +50,6 @@ public class Parser
                 {
                     return ParseAssignmentStatement();
                 }
-
                 break;
         }
 
@@ -78,7 +76,6 @@ public class Parser
         while (!Match(TokenType.End) && !Check(TokenType.Else))
         {
             var statement = ParseStatement();
-            
             if (statement is ReturnStatement _return)
             {
                 returnStatement = _return;
@@ -88,8 +85,7 @@ public class Parser
                 statements.Add(statement);
             }
         }
-
-        // TODO: Parse return.
+        
         return new Block(statements, returnStatement);
     }
 
@@ -122,12 +118,9 @@ public class Parser
         
         // Else branch.
         Block? @else = null;
-        if (!IsAtEnd())
+        if (!IsAtEnd() && Match(TokenType.Else))
         {
-            if (Match(TokenType.Else))
-            {
-                @else = ParseBlock();
-            }
+            @else = ParseBlock();
         }
         return new IfElseStatement(condition, then, @else);
     }
@@ -138,15 +131,7 @@ public class Parser
         var name = Consume(TokenType.Name, "TODO");
         Consume(TokenType.LeftParen, "TODO");
         Consume(TokenType.RightParen, "TODO");
-        var statements = new List<IStatement>();
-        while (!Check(TokenType.End))
-        {
-            var statement = ParseStatement();
-            statements.Add(statement);
-        }
-
-        var block = new Block(statements, null);
-        Consume(TokenType.End, "TODO");
+        var block = ParseBlock();
         return new FunctionStatement(name.Source, new List<string>(), block);
     }
 
@@ -163,23 +148,17 @@ public class Parser
 
         var expr = prefixRule(token);
 
-        if (!IsAtEnd()) // TODO: Cleanup.
+        if (IsAtEnd()) return expr; // TODO: Cleanup.
+        
+        while (precedence <= GetRule(PeekType()).Precedence)
         {
-            while (precedence <= GetRule(PeekType()).Precedence)
-            {
-                token = Next();
-                var infixRule = GetRule(token.Type).Infix;
-                if (infixRule == null) throw new Exception("Expected expression");
-                return infixRule(token, expr);
-            }
+            token = Next();
+            var infixRule = GetRule(token.Type).Infix;
+            if (infixRule == null) throw new Exception("Expected expression");
+            return infixRule(token, expr);
         }
 
         return expr;
-    }
-
-    private static ParseRule GetRule(TokenType tokenType)
-    {
-        return ParserRules.GetRule(tokenType);
     }
 
     public static IExpression Or(Token token, IExpression left)
@@ -248,11 +227,11 @@ public class Parser
     public static IExpression ParseName(Token token)
     {
         // TODO: Fix.
-        if (Check(TokenType.LeftParen))
+        // Function call.
+        if (Check(TokenType.LeftParen)) 
         {
             Consume(TokenType.LeftParen, "");
             Consume(TokenType.RightParen, "");
-            // Function call.
             return new FunctionCallExpression(
                 new NameExpression(token.Source),
                 new List<IExpression>()
@@ -270,8 +249,8 @@ public class Parser
 
     public static IExpression Bool(Token token)
     {
-        var @bool = Convert.ToBoolean(token.Source);
-        return new BoolExpression(@bool);
+        var boolean = Convert.ToBoolean(token.Source);
+        return new BoolExpression(boolean);
     }
 
     public static IExpression Nil(Token token)
@@ -309,5 +288,7 @@ public class Parser
 
     private static TokenType PeekType(int n) => _tokens[^n].Type;
 
+    private static ParseRule GetRule(TokenType tokenType) => ParserRules.GetRule(tokenType);
+    
     private static bool IsAtEnd() => !_tokens.Any();
 }

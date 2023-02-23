@@ -1,4 +1,4 @@
-namespace Mint.Syntax;
+namespace Mint.Parser;
 
 public static class Lexer
 {
